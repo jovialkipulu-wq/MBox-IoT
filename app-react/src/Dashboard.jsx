@@ -197,6 +197,7 @@ function Dashboard() {
     if (!Array.isArray(reservations)) return null;
     const slotStart = `${selectedDate}T${slot.start}`;
     return reservations.find((r) => {
+      if (r.status !== 'confirmed') return false;
       const rStart = r.start_time.replace(' ', 'T');
       return rStart.startsWith(slotStart.substring(0, 16));
     });
