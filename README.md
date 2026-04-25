@@ -1,6 +1,6 @@
 # MeetingBox IoT
 
-Application web de gestion d'une salle connectée (MeetingBox) au Campus ICAM. Elle combine un tableau de bord IoT en temps réel, un système de réservation de créneaux horaires, et une simulation de capteurs environnementaux.
+Application web de gestion d'une salle connectée (MeetingBox) au Campus ICAM. Elle combine un tableau de bord IoT en temps réel, un système de réservation de créneaux horaires, etc.
 
 ---
 
