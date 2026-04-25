@@ -1,10 +1,7 @@
 from datetime import datetime
 import pymysql
-from influxdb_client import InfluxDBClient
 
 
-influx_client = None
-influx_query_api = None
 _mariadb_config = None
 
 
@@ -64,25 +61,6 @@ def _create_tables():
     conn.commit()
     cur.close()
     conn.close()
-
-
-def init_influxdb(app):
-    global influx_client, influx_query_api
-    token = app.config["INFLUXDB_TOKEN"]
-    if not token:
-        influx_client = None
-        influx_query_api = None
-        return
-    influx_client = InfluxDBClient(
-        url=app.config["INFLUXDB_URL"],
-        token=token,
-        org=app.config["INFLUXDB_ORG"],
-    )
-    influx_query_api = influx_client.query_api()
-
-
-def get_influx_query():
-    return influx_query_api
 
 
 def format_dt(value):

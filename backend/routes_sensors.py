@@ -1,7 +1,6 @@
 from datetime import datetime, timedelta
 import random
-from flask import Blueprint, current_app, jsonify, request
-from db import get_influx_query
+from flask import Blueprint, jsonify, request
 
 
 sensors_bp = Blueprint("sensors", __name__)
@@ -36,34 +35,7 @@ def latest():
 def history():
     sensor = request.args.get("sensor", "temperature")
     count = max(5, min(int(request.args.get("count", "60")), 300))
-    org = current_app.config["INFLUXDB_ORG"]
-    bucket = current_app.config["INFLUXDB_BUCKET"]
 
-    query_api = get_influx_query()
-    if query_api:
-        try:
-            flux = f"""
-            from(bucket: "{bucket}")
-              |> range(start: -7d)
-              |> filter(fn: (r) => r._measurement == "meeting_room")
-              |> filter(fn: (r) => r._field == "{sensor}")
-              |> sort(columns: ["_time"], desc: true)
-              |> limit(n: {count})
-              |> sort(columns: ["_time"])
-            """
-            result = query_api.query(flux, org=org)
-            records = []
-            for table in result:
-                for record in table.records:
-                    records.append(
-                        {"time": record.get_time().isoformat(), "value": record.get_value()}
-                    )
-            if records:
-                return jsonify({"sensor": sensor, "data": records})
-        except Exception:
-            pass
-
-    # Fallback simulation si Influx n'est pas prêt ou vide.
     now = datetime.now()
     base = {"temperature": 23.0, "co2": 700, "humidity": 45, "light": 300}.get(sensor, 1)
     variance = {"temperature": 1.8, "co2": 250, "humidity": 12, "light": 180}.get(sensor, 0.5)

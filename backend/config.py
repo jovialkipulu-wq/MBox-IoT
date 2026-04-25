@@ -24,11 +24,6 @@ class Config:
     MARIADB_PASSWORD = os.getenv("MARIADB_PASSWORD", "meetingbox_password")
     MARIADB_DATABASE = os.getenv("MARIADB_DATABASE", "meetingbox")
 
-    INFLUXDB_URL = os.getenv("INFLUXDB_URL", "http://localhost:8086")
-    INFLUXDB_TOKEN = os.getenv("INFLUXDB_TOKEN", "")
-    INFLUXDB_ORG = os.getenv("INFLUXDB_ORG", "icam")
-    INFLUXDB_BUCKET = os.getenv("INFLUXDB_BUCKET", "sensors")
-
     ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "admin123")
 
     SECRET_KEY = os.getenv("SECRET_KEY", "dev-secret-key")

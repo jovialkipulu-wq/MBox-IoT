@@ -1,7 +1,7 @@
 from flask import Flask, jsonify
 from flask_cors import CORS
 from config import Config
-from db import init_influxdb, init_mariadb
+from db import init_mariadb
 from routes_auth import auth_bp
 from routes_reservations import reservations_bp
 from routes_sensors import sensors_bp
@@ -13,7 +13,6 @@ def create_app():
     CORS(app)
 
     init_mariadb(app)
-    init_influxdb(app)
 
     app.register_blueprint(auth_bp, url_prefix="/api/auth")
     app.register_blueprint(reservations_bp, url_prefix="/api/reservations")

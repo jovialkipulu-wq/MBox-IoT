@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import './Dashboard.css';
 
 const API_BASE = 'http://localhost:5000/api';
@@ -59,9 +58,6 @@ const Modal = ({ show, onClose, title, children }) => {
 /* ───────── Main Dashboard ───────── */
 function Dashboard() {
   const [dark, setDark] = useState(false);
-  const [data, setData] = useState(null);
-  const [error, setError] = useState(false);
-  const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
   const [showAdminLogin, setShowAdminLogin] = useState(false);
   const [adminInput, setAdminInput] = useState('');
@@ -84,9 +80,6 @@ function Dashboard() {
   // Admin
   const [allReservations, setAllReservations] = useState([]);
 
-  // Historique capteurs
-  const [history, setHistory] = useState([]);
-
   // ── Apply dark mode to HTML root ──
   useEffect(() => {
     if (dark) {
@@ -95,53 +88,6 @@ function Dashboard() {
       document.documentElement.classList.remove('dark');
     }
   }, [dark]);
-
-  // ── Fetch sensor data ──
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await fetch(`${API_BASE}/sensors/latest`);
-        const json = await res.json();
-        setData(json);
-        setError(false);
-        setLoading(false);
-      } catch {
-        setError(true);
-        setLoading(false);
-      }
-    };
-    fetchData();
-    const interval = setInterval(fetchData, 3000);
-    return () => clearInterval(interval);
-  }, []);
-
-  // ── Fetch sensor history ──
-  useEffect(() => {
-    const fetchHistory = async () => {
-      try {
-        const res = await fetch(`${API_BASE}/sensors/history?sensor=temperature&count=60`);
-        const json = await res.json();
-        if (json.data) {
-          const formatted = json.data.map((d) => ({
-            time: d.time ? new Date(d.time).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) : '',
-            temperature: d.value,
-          }));
-          // Also fetch CO2
-          const resCo2 = await fetch(`${API_BASE}/sensors/history?sensor=co2&count=60`);
-          const jsonCo2 = await resCo2.json();
-          if (jsonCo2.data) {
-            jsonCo2.data.forEach((d, i) => {
-              if (formatted[i]) formatted[i].co2 = d.value;
-            });
-          }
-          setHistory(formatted);
-        }
-      } catch { /* silent */ }
-    };
-    fetchHistory();
-    const interval = setInterval(fetchHistory, 15000);
-    return () => clearInterval(interval);
-  }, []);
 
   // ── Fetch reservations for selected date ──
   const fetchReservations = useCallback(async () => {
@@ -299,45 +245,12 @@ function Dashboard() {
     } catch { showFeedback('Serveur injoignable', 'error'); }
   };
 
-  // ── CO2 status ──
-  const getCo2Status = (co2) => {
-    if (!co2) return 'ok';
-    if (co2 > 1000) return 'danger';
-    if (co2 > 800) return 'alert';
-    return 'ok';
-  };
-
-  const getCo2Label = (co2) => {
-    if (!co2) return '--';
-    return co2;
-  };
-
-  const getCo2Quality = (co2) => {
-    if (!co2) return '';
-    if (co2 < 600) return 'Excellent';
-    if (co2 < 1000) return 'Correct';
-    return 'Mauvais — Aérez !';
-  };
-
-  const lastUpdate = data?.timestamp
-    ? new Date(data.timestamp).toLocaleTimeString('fr-FR')
-    : '--:--:--';
-
-  const co2High = data?.co2 && data.co2 > 1000;
-
   return (
     <div className={`page ${dark ? 'dark' : ''}`}>
 
       {/* ─── Feedback toast ─── */}
       {feedback && (
         <div className={`toast toast-${feedback.type}`}>{feedback.msg}</div>
-      )}
-
-      {/* ─── CO2 Alert Banner ─── */}
-      {co2High && (
-        <div className="co2-alert-banner">
-          <span>⚠️ CO₂ élevé ({data.co2} ppm) — Veuillez aérer la salle</span>
-        </div>
       )}
 
       {/* ─── Top bar ─── */}
@@ -399,73 +312,24 @@ function Dashboard() {
         </div>
       </section>
 
-      {/* ====== SECTION 2 : DONNÉES CAPTEURS ====== */}
+      {/* ====== SECTION 2 : TABLEAU DE BORD THINGSBOARD ====== */}
       <section className="section" id="data">
         <h2 className="section-title">
           <span className="title-dot"></span>
           Données en direct
         </h2>
         <p className="section-sub">
-          {error ? '❌ Connexion au serveur impossible' : `Mise à jour : ${lastUpdate}`}
+          Tableau de bord IoT — ThingsBoard
         </p>
 
-        <div className="grid grid-3">
-          <Card
-            icon="🌡️"
-            title="Température"
-            value={data?.temperature ?? '--'}
-            unit="°C"
-            status="ok"
-            loading={loading}
-          />
-          <Card
-            icon="🌬️"
-            title="Qualité Air (CO₂)"
-            value={getCo2Label(data?.co2)}
-            unit={`ppm · ${getCo2Quality(data?.co2)}`}
-            status={getCo2Status(data?.co2)}
-            loading={loading}
-          />
-          <Card
-            icon="👤"
-            title="Présence"
-            value={data?.presence ? 'Occupé' : 'Libre'}
-            unit=""
-            status={data?.presence ? 'alert' : 'ok'}
-            loading={loading}
+        <div className="tb-iframe-wrap">
+          <iframe
+            src="https://thingsboard.icam.technology/dashboard/58cd7d80-401c-11f1-b38a-4df4ced3e7cf?publicId=ac4bdf80-c9e6-11f0-b38a-4df4ced3e7cf&title=false&header=false&toolbar=false"
+            title="ThingsBoard Dashboard"
+            className="tb-iframe"
+            allowFullScreen
           />
         </div>
-
-        {/* ── Historique graphique ── */}
-        {history.length > 3 && (
-          <div className="chart-section">
-            <h3 className="chart-title">Historique récent</h3>
-            <div className="chart-container">
-              <ResponsiveContainer width="100%" height={250}>
-                <LineChart data={history}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-                  <XAxis dataKey="time" tick={{ fill: 'var(--text-dim)', fontSize: 11 }} />
-                  <YAxis yAxisId="temp" domain={['auto', 'auto']} tick={{ fill: '#f59e0b', fontSize: 11 }} />
-                  <YAxis yAxisId="co2" orientation="right" domain={['auto', 'auto']} tick={{ fill: '#3b82f6', fontSize: 11 }} />
-                  <Tooltip
-                    contentStyle={{
-                      background: 'var(--card)',
-                      border: '1px solid var(--border)',
-                      borderRadius: '10px',
-                      color: 'var(--text)',
-                    }}
-                  />
-                  <Line yAxisId="temp" type="monotone" dataKey="temperature" stroke="#f59e0b" strokeWidth={2} dot={false} name="Température °C" />
-                  <Line yAxisId="co2" type="monotone" dataKey="co2" stroke="#3b82f6" strokeWidth={2} dot={false} name="CO₂ ppm" />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-            <div className="chart-legend">
-              <span className="chart-legend-item"><span className="chart-dot" style={{ background: '#f59e0b' }}></span> Température (°C)</span>
-              <span className="chart-legend-item"><span className="chart-dot" style={{ background: '#3b82f6' }}></span> CO₂ (ppm)</span>
-            </div>
-          </div>
-        )}
       </section>
 
       {/* ====== SECTION 3 : PLANNING ====== */}
