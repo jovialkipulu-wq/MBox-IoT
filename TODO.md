@@ -1,19 +1,17 @@
-# TODO - Remove InfluxDB + Integrate ThingsBoard iframe
+# Plan : Étendre le ThingsBoard sur toute la largeur
 
-## Backend
-- [x] Remove `influxdb-client` from `requirements.txt`
-- [x] Remove InfluxDB config from `config.py`
-- [x] Remove InfluxDB code from `db.py`
-- [x] Remove InfluxDB init from `app.py`
-- [x] Remove InfluxDB query from `routes_sensors.py`
+## Problème
+La section ThingsBoard (`#data`) est limitée par `.section { max-width: 1100px; margin: 0 auto; }`. L'iframe fait `width: 100%` mais reste confinée dans un conteneur de 1100px max.
 
-## Frontend
-- [x] Add ThingsBoard iframe to `Dashboard.jsx` (replace sensor cards + chart)
-- [x] Add iframe styles to `Dashboard.css`
+## Étapes
 
-## Follow-up
-- [x] Code changes completed ✅
-- [ ] Run `pip install -r backend/requirements.txt` to clean InfluxDB dependency
-- [ ] Restart Flask backend
-- [ ] Run `npm run dev` in `app-react/` and verify the ThingsBoard iframe loads
+- [x] **Dashboard.jsx** : Ajouter une classe modificateur `section-wide` à la section `#data` (ThingsBoard)
+- [x] **Dashboard.css** : 
+   - Créer la classe `.section-wide` qui supprime `max-width` et met les marges à 0
+   - L'iframe wrap (`tb-iframe-wrap`) occupera 100% de la largeur
+   - Augmenter la hauteur de l'iframe (`tb-iframe`) à `75vh` pour un meilleur rendu
+
+## Fichiers modifiés
+- `app-react/src/Dashboard.jsx`
+- `app-react/src/Dashboard.css`
 
