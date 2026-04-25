@@ -1,6 +1,6 @@
 # MeetingBox IoT
 
-Application web de gestion d'une salle connectée (MeetingBox) au Campus ICAM. Elle combine un tableau de bord IoT en temps réel, un système de réservation de créneaux horaires, etc.
+Application web de gestion d'une salle connectée (MeetingBox) au Campus ICAM. Elle combine un tableau de bord IoT en temps réel via ThingsBoard et un système de réservation de créneaux horaires.
 
 ---
 
@@ -10,7 +10,7 @@ Le projet est structuré en trois parties :
 
 | Dossier | Technologie | Rôle |
 |---------|-------------|------|
-| `backend/` | Python (Flask) + MariaDB | API REST, authentification, gestion des réservations, données capteurs |
+| `backend/` | Python (Flask) + MariaDB | API REST, authentification, gestion des réservations |
 | `app-react/` | React + Vite | Application principale — interface utilisateur complète |
 | `app/` | TypeScript + Vite | Version prototype/alternative du frontend |
 
@@ -18,7 +18,7 @@ Le projet est structuré en trois parties :
 
 ## Fonctionnalités
 
-### Tableau de bord IoT (ThingsBoard)
+### Données capteurs en temps réel (ThingsBoard)
 - Intégration d'un dashboard ThingsBoard public en temps réel
 - Affichage des données capteurs : température, humidité, CO₂, luminosité, détection de présence
 
@@ -33,10 +33,7 @@ Le projet est structuré en trois parties :
 - Visualisation de **toutes** les réservations
 - Annulation directe sans PIN requis
 
-### Capteurs (simulation)
-- Endpoints REST de simulation en attendant l'intégration matérielle (Raspberry Pi)
-- Génération de données réalistes (variation douce des valeurs)
-- Historique configurable (`/api/sensors/history?sensor=temperature&count=60`)
+
 
 ---
 
@@ -89,8 +86,6 @@ L'application est accessible sur `http://localhost:5173` (par défaut Vite).
 | `DELETE` | `/api/reservations/<id>` | Annuler avec PIN |
 | `GET` | `/api/reservations/admin/all` | Liste complète (admin) |
 | `DELETE` | `/api/reservations/admin/<id>` | Annulation admin |
-| `GET` | `/api/sensors/latest` | Dernières valeurs capteurs |
-| `GET` | `/api/sensors/history` | Historique d'un capteur |
 
 ---
 
