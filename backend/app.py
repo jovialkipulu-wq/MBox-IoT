@@ -4,7 +4,6 @@ from config import Config
 from db import init_mariadb
 from routes_auth import auth_bp
 from routes_reservations import reservations_bp
-from routes_sensors import sensors_bp
 
 
 def create_app():
@@ -16,7 +15,6 @@ def create_app():
 
     app.register_blueprint(auth_bp, url_prefix="/api/auth")
     app.register_blueprint(reservations_bp, url_prefix="/api/reservations")
-    app.register_blueprint(sensors_bp, url_prefix="/api/sensors")
 
     @app.route("/api/health", methods=["GET"])
     def health():

@@ -12,7 +12,7 @@ Le projet est structuré en trois parties :
 |---------|-------------|------|
 | `backend/` | Python (Flask) + MariaDB | API REST, authentification, gestion des réservations |
 | `app-react/` | React + Vite | Application principale — interface utilisateur complète |
-| `app/` | TypeScript + Vite | Version prototype/alternative du frontend |
+| `gateway/` | Python (CircuitPython + MQTT) | Acquisition capteurs et télémtrie ThingsBoard |
 
 ---
 
@@ -73,7 +73,24 @@ npm run dev
 
 L'application est accessible sur `http://localhost:5173` (par défaut Vite).
 
----
+### 4. Passerelle IoT (Raspberry Pi)
+
+> À exécuter **uniquement sur le Raspberry Pi** connecté aux capteurs.
+
+Créer un environnement virtuel pour isoler les dépendances système :
+
+```bash
+cd gateway
+python -m venv venv
+source venv/bin/activate  # Linux/macOS
+# ou
+venv\Scripts\activate     # Windows
+
+pip install -r requirements.txt
+python connect.py
+```
+
+
 
 ## Structure de l'API
 
@@ -91,7 +108,7 @@ L'application est accessible sur `http://localhost:5173` (par défaut Vite).
 
 ## Technologies utilisées
 
-- **Frontend** : React 19, Vite, Recharts
+- **Frontend** : React 19, Vite
 - **Backend** : Flask, Flask-CORS, PyMySQL
 - **Base de données** : MariaDB
 - **IoT / Visualisation** : ThingsBoard (iframe)

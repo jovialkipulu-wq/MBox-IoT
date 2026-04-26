@@ -1,0 +1,21 @@
+# Environnements virtuels Python
+venv/
+.venv/
+env/
+ENV/
+
+# Fichiers d'environnement
+.env
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Node modules
+node_modules/
+
+# Build outputs
+dist/
+build/
+
