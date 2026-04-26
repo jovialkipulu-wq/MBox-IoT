@@ -12,7 +12,7 @@ Le projet est structuré en trois parties :
 |---------|-------------|------|
 | `backend/` | Python (Flask) + MariaDB | API REST, authentification, gestion des réservations |
 | `app-react/` | React + Vite | Application principale — interface utilisateur complète |
-| `gateway/` | Python (CircuitPython + MQTT) | Acquisition capteurs et télémtrie ThingsBoard |
+| `gateway/` | Python (CircuitPython + MQTT) | Acquisition capteurs et télémétrie ThingsBoard |
 
 ---
 
