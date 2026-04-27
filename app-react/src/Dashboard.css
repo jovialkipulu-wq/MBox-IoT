@@ -1102,9 +1102,40 @@ input[type="time"].modal-time-input::-webkit-calendar-picker-indicator {
 }
 
 /* ───────── Responsive ───────── */
+@media (max-width: 1024px) {
+  .grid-3 { grid-template-columns: 1fr; }
+
+  .tb-iframe-wrap {
+    width: calc(100% - 2rem);
+    height: 500px;
+    overflow: hidden;
+  }
+
+  .tb-iframe {
+    width: 1600px;
+    height: 900px;
+    margin: 0 auto;
+    transform: scale(.5);
+    transform-origin: top center;
+  }
+}
+
 @media (max-width: 768px) {
   .grid-3 { grid-template-columns: 1fr; }
-  .tb-iframe { height: 450px; }
+
+  .tb-iframe-wrap {
+    width: calc(100% - 1rem);
+    height: 380px;
+    overflow: hidden;
+  }
+
+  .tb-iframe {
+    width: 1500px;
+    height: 850px;
+    margin: 0 auto;
+    transform: scale(.42);
+    transform-origin: top center;
+  }
 }
 
 @media (max-width: 600px) {
@@ -1118,5 +1149,18 @@ input[type="time"].modal-time-input::-webkit-calendar-picker-indicator {
   .topbar { top: .8rem; right: .8rem; }
   .hero-btns { flex-direction: column; }
   .chart-section { padding: 1rem; }
-  .tb-iframe { height: 350px; }
+
+  .tb-iframe-wrap {
+    width: calc(100% - 1rem);
+    height: 320px;
+    overflow: hidden;
+  }
+
+  .tb-iframe {
+    width: 1400px;
+    height: 800px;
+    margin: 0 auto;
+    transform: scale(.38);
+    transform-origin: top center;
+  }
 }
