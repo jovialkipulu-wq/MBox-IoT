@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,500;0,9..40,700;1,9..40,300&family=Syne:wght@700;800&display=swap');
 
-/* ───────── Variables (Light Mode) ───────── */
+/* ───────── Variables ───────── */
 :root {
   --bg: #f5f7fa;
   --surface: #edf0f5;
@@ -14,21 +14,6 @@
   --warning: #d97706;
   --danger: #dc2626;
   --radius: 14px;
-}
-
-/* ───────── Dark Mode ───────── */
-:root.dark {
-  --bg: #07090c;
-  --surface: #10141a;
-  --card: #151a22;
-  --border: #1e2736;
-  --text: #e8ecf1;
-  --text-dim: #6b7a90;
-  --accent: #38bdf8;
-  --accent-glow: rgba(56, 189, 248, .15);
-  --success: #34d399;
-  --warning: #fbbf24;
-  --danger: #f87171;
 }
 
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -63,6 +48,7 @@ body {
   transition: background .4s, color .4s;
   display: flex;
   flex-direction: column;
+  padding-bottom: 64px;
 }
 
 /* ───────── Top Bar ───────── */
@@ -75,23 +61,6 @@ body {
   gap: .6rem;
   align-items: center;
 }
-
-.theme-toggle {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  border: 1px solid var(--border);
-  background: var(--card);
-  font-size: 1.2rem;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform .2s, background .3s, border-color .3s;
-  box-shadow: 0 2px 12px rgba(0,0,0,.08);
-}
-
-.theme-toggle:hover { transform: scale(1.08); }
 
 .admin-btn {
   padding: 8px 16px;
@@ -183,21 +152,15 @@ body {
 }
 
 .hero-title span {
-  background: linear-gradient(135deg, var(--accent), #a78bfa);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.page:not(.dark) .hero-title span {
   background: linear-gradient(135deg, var(--accent), #7c3aed);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-/* En mode clair: harmoniser les titres avec la couleur "MeetingBox". */
-.page:not(.dark) .hero-title,
-.page:not(.dark) .hero-title span,
-.page:not(.dark) .section-title {
+/* Titres principaux en couleur accent. */
+.hero-title,
+.hero-title span,
+.section-title {
   color: var(--accent);
   background: none !important;
   -webkit-text-fill-color: currentColor !important;
@@ -286,9 +249,6 @@ body {
 .card:hover {
   transform: translateY(-4px);
   border-color: var(--accent);
-}
-
-.page:not(.dark) .card {
   box-shadow: 0 2px 12px rgba(0,0,0,.06);
 }
 
@@ -395,12 +355,6 @@ body {
   border-color: var(--accent);
 }
 
-:root.dark .time-input {
-  color-scheme: dark;
-  color: var(--text);
-  background: var(--surface);
-}
-
 .book-btn-inline {
   padding: 10px 20px;
   border-radius: 10px;
@@ -491,17 +445,6 @@ body {
   outline-offset: 2px;
 }
 
-:root.dark .date-picker-open-btn,
-:root.dark .date-display-btn {
-  color-scheme: dark;
-  background: var(--surface);
-  color: var(--text-dim);
-}
-
-:root.dark .date-display-btn:hover {
-  color: var(--text);
-}
-
 .date-input {
   padding: 10px 16px;
   border-radius: 10px;
@@ -519,20 +462,9 @@ body {
   cursor: pointer;
 }
 
-:root.dark .date-input::-webkit-calendar-picker-indicator {
-  filter: invert(1) brightness(1.2);
-}
-
 .date-input:focus {
   outline: none;
   border-color: var(--accent);
-}
-
-/* Calendrier natif lisible en mode sombre (sinon fond blanc / texte invisible selon navigateur). */
-:root.dark .date-input {
-  color-scheme: dark;
-  color: var(--text);
-  background: var(--surface);
 }
 
 .date-display {
@@ -645,8 +577,6 @@ body {
 }
 
 .slot-selected .slot-status { color: var(--accent); }
-
-
 
 /* ───────── Modal ───────── */
 .modal-overlay {
@@ -789,14 +719,6 @@ input[type="time"].modal-time-input {
 input[type="time"].modal-time-input::-webkit-calendar-picker-indicator {
   filter: invert(0.5);
   cursor: pointer;
-}
-
-:root.dark input[type="time"].modal-time-input::-webkit-calendar-picker-indicator {
-  filter: invert(0.8);
-}
-
-:root.dark .modal-input {
-  color-scheme: dark;
 }
 
 /* ───────── Admin Table ───────── */
@@ -1000,9 +922,6 @@ input[type="time"].modal-time-input::-webkit-calendar-picker-indicator {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-}
-
-.page:not(.dark) .chart-section {
   box-shadow: 0 2px 12px rgba(0,0,0,.06);
 }
 
@@ -1072,9 +991,6 @@ input[type="time"].modal-time-input::-webkit-calendar-picker-indicator {
   border: 1px solid var(--border);
   overflow: hidden;
   background: var(--card);
-}
-
-.page:not(.dark) .tb-iframe-wrap {
   box-shadow: 0 2px 12px rgba(0,0,0,.06);
 }
 
@@ -1185,11 +1101,6 @@ input[type="time"].modal-time-input::-webkit-calendar-picker-indicator {
   border-color: rgba(255,255,255,.6);
 }
 
-/* Marge en bas pour éviter que la barre fixe ne masque le contenu */
-.page {
-  padding-bottom: 64px;
-}
-
 /* ───────── Responsive ───────── */
 @media (max-width: 768px) {
   .grid-3 { grid-template-columns: 1fr; }
@@ -1209,5 +1120,3 @@ input[type="time"].modal-time-input::-webkit-calendar-picker-indicator {
   .chart-section { padding: 1rem; }
   .tb-iframe { height: 350px; }
 }
-
-

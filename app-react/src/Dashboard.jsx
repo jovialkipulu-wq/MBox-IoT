@@ -64,7 +64,6 @@ const Modal = ({ show, onClose, title, children }) => {
 };
 
 function Dashboard() {
-  const [dark, setDark] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [showAdminLogin, setShowAdminLogin] = useState(false);
   const [adminInput, setAdminInput] = useState('');
@@ -87,11 +86,6 @@ function Dashboard() {
   const [bookEndTime, setBookEndTime] = useState('09:00');
 
   const [allReservations, setAllReservations] = useState([]);
-
-  useEffect(() => {
-    if (dark) document.documentElement.classList.add('dark');
-    else document.documentElement.classList.remove('dark');
-  }, [dark]);
 
   const fetchReservations = useCallback(async () => {
     try {
@@ -180,6 +174,14 @@ function Dashboard() {
   }, [reservations, selectedDate]);
 
   const timeSlots = useMemo(() => generateTimeSlots(), [generateTimeSlots]);
+
+  useEffect(() => {
+    const nextSlot = timeSlots.find((s) => !s.reserved) || null;
+    if (nextSlot) {
+      setBookStartTime(minutesToTime(nextSlot.startMin));
+      setBookEndTime(minutesToTime(nextSlot.endMin));
+    }
+  }, [selectedDate, timeSlots]);
 
   const getNextAvailableSlot = useCallback(() => {
     const today = new Date().toISOString().split('T')[0];
@@ -332,15 +334,12 @@ function Dashboard() {
   };
 
   return (
-    <div className={`page ${dark ? 'dark' : ''}`}>
+    <div className="page">
       {feedback && (
         <div className={`toast toast-${feedback.type}`}>{feedback.msg}</div>
       )}
 
       <div className="topbar">
-        <button className="theme-toggle" onClick={() => setDark(!dark)} aria-label="Thème">
-          {dark ? '☀️' : '🌙'}
-        </button>
         {!isAdmin ? (
           <button className="admin-btn" onClick={() => setShowAdminLogin(true)}>🔒 Admin</button>
         ) : (
