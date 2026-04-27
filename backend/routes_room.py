@@ -1,5 +1,6 @@
 from datetime import datetime, timezone, timedelta
 from flask import Blueprint, jsonify, request
+from db import get_mariadb
 
 room_bp = Blueprint("room", __name__)
 
@@ -14,7 +15,7 @@ _occupancy_state = {
 _presence_validated_for = None
 
 # Délai de grâce (en minutes) avant annulation automatique si aucune présence
-GRACE_PERIOD_MINUTES = 15
+GRACE_PERIOD_MINUTES = 30
 
 
 def _get_active_reservation():
@@ -179,4 +180,3 @@ def get_room_status():
             "end_time": row["end_time"].isoformat() if isinstance(row["end_time"], datetime) else row["end_time"],
         },
     })
-

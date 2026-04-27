@@ -363,6 +363,63 @@ body {
   flex-wrap: wrap;
 }
 
+/* ───────── Time Picker Group ───────── */
+.time-picker-group {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  flex-wrap: wrap;
+  margin-left: auto;
+}
+
+.time-label {
+  font-weight: 600;
+  font-size: .85rem;
+  color: var(--text-dim);
+}
+
+.time-input {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  font-family: inherit;
+  font-size: .95rem;
+  cursor: pointer;
+  transition: border-color .2s;
+}
+
+.time-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+:root.dark .time-input {
+  color-scheme: dark;
+  color: var(--text);
+  background: var(--surface);
+}
+
+.book-btn-inline {
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: none;
+  background: var(--accent);
+  color: var(--bg);
+  font-family: inherit;
+  font-weight: 700;
+  font-size: .9rem;
+  cursor: pointer;
+  transition: transform .2s, box-shadow .2s;
+  box-shadow: 0 2px 12px var(--accent-glow);
+}
+
+.book-btn-inline:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px var(--accent-glow);
+}
+
 /* Input natif hors écran : ouverture via bouton (showPicker / click). */
 .date-input-native-hidden {
   position: absolute;
@@ -695,6 +752,51 @@ body {
 
 .modal-btn-danger:hover {
   box-shadow: 0 8px 30px rgba(220, 38, 38, .3);
+}
+
+/* ───────── Modal Time Row ───────── */
+.modal-time-row {
+  display: flex;
+  gap: .75rem;
+  margin-bottom: .8rem;
+}
+
+.modal-time-field {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: .25rem;
+}
+
+.modal-time-field label {
+  font-size: .78rem;
+  font-weight: 600;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+
+.modal-time-field .modal-input {
+  margin-bottom: 0;
+}
+
+input[type="time"].modal-time-input {
+  padding: 10px 12px;
+  min-height: 44px;
+  cursor: text;
+}
+
+input[type="time"].modal-time-input::-webkit-calendar-picker-indicator {
+  filter: invert(0.5);
+  cursor: pointer;
+}
+
+:root.dark input[type="time"].modal-time-input::-webkit-calendar-picker-indicator {
+  filter: invert(0.8);
+}
+
+:root.dark .modal-input {
+  color-scheme: dark;
 }
 
 /* ───────── Admin Table ───────── */
@@ -1099,6 +1201,9 @@ body {
   .section { padding: 3rem 1.2rem; }
   .slots-grid { grid-template-columns: 1fr; }
   .date-picker-row { flex-direction: column; align-items: flex-start; }
+  .time-picker-group { margin-left: 0; width: 100%; }
+  .time-input { flex: 1; min-width: 80px; }
+  .book-btn-inline { width: 100%; margin-top: .5rem; }
   .topbar { top: .8rem; right: .8rem; }
   .hero-btns { flex-direction: column; }
   .chart-section { padding: 1rem; }

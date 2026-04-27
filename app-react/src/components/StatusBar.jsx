@@ -18,7 +18,7 @@ const STATUS_CONFIG = {
     sub: '',
     className: 'occupied',
   },
-};
+}; 
 
 export default function StatusBar() {
   const [status, setStatus] = useState('free');
