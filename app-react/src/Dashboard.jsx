@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import './Dashboard.css';
+import StatusBar from './components/StatusBar.jsx';
 
 const API_BASE = 'http://localhost:5000/api';
 
@@ -506,6 +507,8 @@ src="https://thingsboard.icam.technology/dashboard/58cd7d80-401c-11f1-b38a-4df4c
           </div>
         </section>
       )}
+
+      <StatusBar />
 
       {/* ====== FOOTER ====== */}
       <footer className="footer">

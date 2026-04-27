@@ -984,6 +984,110 @@ body {
   border-radius: 18px;
 }
 
+/* ───────── Status Bar ───────── */
+.status-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 180;
+  padding: 14px 24px;
+  font-weight: 700;
+  font-size: .95rem;
+  color: #fff;
+  transition: background .35s, box-shadow .35s;
+  box-shadow: 0 -4px 20px rgba(0,0,0,.12);
+}
+
+.status-bar-content {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.status-bar-text {
+  display: flex;
+  align-items: center;
+  gap: .35rem;
+  flex-wrap: wrap;
+}
+
+.status-bar-label {
+  font-family: 'Syne', sans-serif;
+  letter-spacing: .5px;
+}
+
+.status-bar-sub {
+  font-weight: 500;
+  opacity: .9;
+}
+
+.status-bar-countdown {
+  font-weight: 600;
+  font-size: .88rem;
+  margin-left: .5rem;
+  padding: 2px 10px;
+  background: rgba(255,255,255,.2);
+  border-radius: 50px;
+  white-space: nowrap;
+}
+
+.status-bar-urgent {
+  background: rgba(220, 38, 38, .35);
+  animation: pulseUrgent 1.2s ease-in-out infinite;
+}
+
+@keyframes pulseUrgent {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .6; }
+}
+
+/* États */
+.status-bar.free {
+  background: linear-gradient(135deg, #16a34a, #15803d);
+}
+
+.status-bar.reserved {
+  background: linear-gradient(135deg, #d97706, #b45309);
+}
+
+.status-bar.occupied {
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+}
+
+/* Scroll-to-top button */
+.scroll-top-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,.35);
+  background: rgba(255,255,255,.15);
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform .2s, background .2s, border-color .2s;
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+}
+
+.scroll-top-btn:hover {
+  transform: translateY(-2px);
+  background: rgba(255,255,255,.3);
+  border-color: rgba(255,255,255,.6);
+}
+
+/* Marge en bas pour éviter que la barre fixe ne masque le contenu */
+.page {
+  padding-bottom: 64px;
+}
+
 /* ───────── Responsive ───────── */
 @media (max-width: 768px) {
   .grid-3 { grid-template-columns: 1fr; }

@@ -4,10 +4,14 @@ import adafruit_dht
 import digitalio
 import paho.mqtt.client as mqtt
 import json
+import requests
 
 # --- Configuration ThingsBoard ---
 THINGSBOARD_HOST = "thingsboard.icam.technology" 
 ACCESS_TOKEN = "65t7m17joxtk6f5qt638" 
+
+# --- Configuration Backend Flask ---
+BACKEND_URL = "http://localhost:5000/api/room/occupancy"
 
 # --- Configuration Capteurs ---
 # Température & Humidité (GPIO 4)
@@ -47,6 +51,20 @@ try:
             # 3. Envoi à ThingsBoard
             client.publish("v1/devices/me/telemetry", json.dumps(payload))
             
+            # 4. Envoi de l'état d'occupation au backend Flask
+            try:
+                resp = requests.post(
+                    BACKEND_URL,
+                    json={"occupied": is_occupied},
+                    timeout=5
+                )
+                if resp.status_code == 200:
+                    print(f"📡 Backend OK : {resp.json()}")
+                else:
+                    print(f"⚠️ Backend erreur HTTP {resp.status_code}")
+            except Exception as be:
+                print(f"⚠️ Backend injoignable : {be}")
+            
             # Affichage console pour débug
             status = "🔴 OCCUPÉ" if is_occupied else "🟢 LIBRE"
             print(f"✅ {status} | Temp: {t if t else '--'}°C | Hum: {h if h else '--'}%")
@@ -67,3 +85,4 @@ finally:
     client.disconnect()
     dht_device.exit()
     print("✨ Système arrêté proprement.")
+
