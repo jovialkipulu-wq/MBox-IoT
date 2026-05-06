@@ -68,9 +68,15 @@ function Dashboard() {
   const AUTO_SCROLL_MS = 10_000;
   const INITIAL_SCROLL_DELAY_MS = 1000;
 
+  const TIME_STEP_MINUTES = 15;
 
   const [autoScrollIndex, setAutoScrollIndex] = useState(0);
   const [kioskSectionLabel, setKioskSectionLabel] = useState('hero');
+
+  // Kiosk: on met en pause le scroll automatique dès qu'une modal est ouverte
+  // ou qu'un champ est en focus (pour laisser l'utilisateur interagir).
+  const [isAnyModalOpen, setIsAnyModalOpen] = useState(false);
+  const [isAnyInputFocused, setIsAnyInputFocused] = useState(false);
 
   const kioskLabelById = {
     hero: 'HERO',
@@ -78,16 +84,26 @@ function Dashboard() {
     planning: 'PLANNING',
   };
 
+
   const scrollToSectionId = useCallback((id) => {
     const el = document.getElementById(id);
     if (!el) return;
 
-    const y = el.getBoundingClientRect().top + window.scrollY;
-    window.scrollTo({ top: y, behavior: 'auto' });
+    const page = document.querySelector('.page');
+    if (!page) {
+      const y = el.getBoundingClientRect().top + window.scrollY;
+      window.scrollTo({ top: y, behavior: 'auto' });
+      return;
+    }
+
+    const elTop = el.getBoundingClientRect().top;
+    const pageTopInViewport = page.getBoundingClientRect().top;
+    const target = page.scrollTop + (elTop - pageTopInViewport);
+    page.scrollTo({ top: target, behavior: 'auto' });
   }, []);
-  
 
   const [isAdmin, setIsAdmin] = useState(false);
+
 
 
 
