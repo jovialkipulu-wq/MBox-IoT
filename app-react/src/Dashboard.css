@@ -22,6 +22,9 @@ body {
   height: 100%;
   margin: 0;
   padding: 0;
+
+  /* Kiosk: garantir qu'on a un conteneur de scroll actif */
+  overflow-y: auto;
 }
 
 html {

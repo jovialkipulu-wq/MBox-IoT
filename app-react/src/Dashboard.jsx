@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import './Dashboard.css';
 import StatusBar from './components/StatusBar.jsx';
 
@@ -66,17 +66,30 @@ const Modal = ({ show, onClose, title, children }) => {
 function Dashboard() {
   const SECTION_IDS = ['hero', 'data', 'planning'];
   const AUTO_SCROLL_MS = 10_000;
+  const INITIAL_SCROLL_DELAY_MS = 1000;
+
 
   const [autoScrollIndex, setAutoScrollIndex] = useState(0);
+  const [kioskSectionLabel, setKioskSectionLabel] = useState('hero');
+
+  const kioskLabelById = {
+    hero: 'HERO',
+    data: 'DATA',
+    planning: 'PLANNING',
+  };
 
   const scrollToSectionId = useCallback((id) => {
     const el = document.getElementById(id);
     if (!el) return;
-    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    const y = el.getBoundingClientRect().top + window.scrollY;
+    window.scrollTo({ top: y, behavior: 'auto' });
   }, []);
   
 
   const [isAdmin, setIsAdmin] = useState(false);
+
+
 
   useEffect(() => {
     const sectionIds = SECTION_IDS;
@@ -86,8 +99,14 @@ function Dashboard() {
       scrollToSectionId(id);
     };
 
-    // Démarre sur la bonne section dès le montage
+    // Démarre sur la section actuelle
     goToIndex(autoScrollIndex);
+
+    // Kiosk: forcer le premier scroll après 1s (le temps que le layout soit prêt)
+    const initialTimeoutId = window.setTimeout(() => {
+      goToIndex(1);
+      setAutoScrollIndex(1);
+    }, INITIAL_SCROLL_DELAY_MS);
 
     const intervalId = window.setInterval(() => {
       setAutoScrollIndex((prev) => {
@@ -97,9 +116,12 @@ function Dashboard() {
       });
     }, AUTO_SCROLL_MS);
 
-    return () => window.clearInterval(intervalId);
+    return () => {
+      window.clearTimeout(initialTimeoutId);
+      window.clearInterval(intervalId);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [AUTO_SCROLL_MS, SECTION_IDS, autoScrollIndex, scrollToSectionId]);
+  }, [AUTO_SCROLL_MS, SECTION_IDS, scrollToSectionId]);
   const [showAdminLogin, setShowAdminLogin] = useState(false);
   const [adminInput, setAdminInput] = useState('');
 
@@ -375,6 +397,7 @@ function Dashboard() {
       )}
 
       <div className="topbar">
+        
         {!isAdmin ? (
           <button className="admin-btn" onClick={() => setShowAdminLogin(true)}>🔒 Admin</button>
         ) : (
@@ -406,7 +429,7 @@ function Dashboard() {
         <button className="modal-btn" onClick={() => setShowPinReminder(false)}>J'ai noté mon PIN</button>
       </Modal>
 
-      <section className="hero">
+      <section className="hero" id="hero">
         <div className="hero-glow"></div>
         <p className="hero-tag">Campus ICAM</p>
         <h1 className="hero-title">Bienvenue sur <span>MeetingBox</span></h1>
@@ -668,7 +691,7 @@ function Dashboard() {
       <StatusBar />
 
       <footer className="footer">
-        <p>MeetingBox IoT — Campus ICAM © 2026</p>
+        <p>MeetingBox IoT — Campus ICAM-Grand Paris Sud © 2026</p>
       </footer>
     </div>
   );
