@@ -73,10 +73,14 @@ function Dashboard() {
   const [autoScrollIndex, setAutoScrollIndex] = useState(0);
   const [kioskSectionLabel, setKioskSectionLabel] = useState('hero');
 
-  // Kiosk: on met en pause le scroll automatique dès qu'une modal est ouverte
-  // ou qu'un champ est en focus (pour laisser l'utilisateur interagir).
   const [isAnyModalOpen, setIsAnyModalOpen] = useState(false);
   const [isAnyInputFocused, setIsAnyInputFocused] = useState(false);
+
+  // Sync auto-scroll pause state with real UI state
+  useEffect(() => {
+    setIsAnyModalOpen(!!(showAdminLogin || showBookModal || showCancelModal || showPinReminder));
+  }, [showAdminLogin, showBookModal, showCancelModal, showPinReminder]);
+
 
   const kioskLabelById = {
     hero: 'HERO',
@@ -109,6 +113,9 @@ function Dashboard() {
 
   useEffect(() => {
     const sectionIds = SECTION_IDS;
+
+    if (isAnyModalOpen || isAnyInputFocused) return;
+
 
     const goToIndex = (index) => {
       const id = sectionIds[index % sectionIds.length];
