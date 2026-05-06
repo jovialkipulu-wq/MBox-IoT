@@ -64,7 +64,42 @@ const Modal = ({ show, onClose, title, children }) => {
 };
 
 function Dashboard() {
+  const SECTION_IDS = ['hero', 'data', 'planning'];
+  const AUTO_SCROLL_MS = 10_000;
+
+  const [autoScrollIndex, setAutoScrollIndex] = useState(0);
+
+  const scrollToSectionId = useCallback((id) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, []);
+  
+
   const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    const sectionIds = SECTION_IDS;
+
+    const goToIndex = (index) => {
+      const id = sectionIds[index % sectionIds.length];
+      scrollToSectionId(id);
+    };
+
+    // Démarre sur la bonne section dès le montage
+    goToIndex(autoScrollIndex);
+
+    const intervalId = window.setInterval(() => {
+      setAutoScrollIndex((prev) => {
+        const next = (prev + 1) % sectionIds.length;
+        goToIndex(next);
+        return next;
+      });
+    }, AUTO_SCROLL_MS);
+
+    return () => window.clearInterval(intervalId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [AUTO_SCROLL_MS, SECTION_IDS, autoScrollIndex, scrollToSectionId]);
   const [showAdminLogin, setShowAdminLogin] = useState(false);
   const [adminInput, setAdminInput] = useState('');
 

@@ -49,6 +49,15 @@ body {
   display: flex;
   flex-direction: column;
   padding-bottom: 64px;
+
+  /* Kiosk: masquer la scrollbar tout en gardant le scroll */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+.page::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
 }
 
 /* ───────── Top Bar ───────── */
