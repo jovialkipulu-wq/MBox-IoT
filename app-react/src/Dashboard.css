@@ -1185,7 +1185,7 @@ body {
   
   /* On force une taille de PC Desktop */
   width: 1200px !important; 
-  height: 750px !important;
+  height: 765px !important;
   padding-left: 0px; /* Décalage pour compenser les bordures du wrap */
   padding-right: 400px;
   padding-bottom: 20px; /* Décalage pour compenser les bordures du wrap */
