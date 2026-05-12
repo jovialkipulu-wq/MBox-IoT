@@ -82,6 +82,7 @@ function Dashboard() {
     // (le délai est géré par AUTO_SCROLL_MS)
   }, []);
   
+  
 
   const [isAdmin, setIsAdmin] = useState(false);
 
