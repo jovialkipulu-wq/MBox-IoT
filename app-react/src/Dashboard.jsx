@@ -356,8 +356,16 @@ function Dashboard() {
 
   const handleKeyboardKey = ({ type, char }) => {
     if (!keyboardTarget) return;
-    const currentValue = keyboardTarget === 'pin' ? bookPin : bookName;
+
+    const currentValue =
+      keyboardTarget === 'pin'
+        ? bookPin
+        : keyboardTarget === 'admin'
+          ? adminInput
+          : bookName;
+
     let nextValue = currentValue;
+
 
     if (type === 'back') {
       nextValue = currentValue.slice(0, -1);

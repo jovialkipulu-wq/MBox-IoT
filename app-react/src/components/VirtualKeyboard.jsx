@@ -1,13 +1,5 @@
 import React from 'react';
 
-const keysRow = (arr) => (
-  <div className="vk-row">{arr.map((k) => k === 'BACK' ? (
-    <button key={k} className="vk-key vk-key-back" type="button">⌫</button>
-  ) : (
-    <button key={k} className="vk-key" type="button">{k}</button>
-  ))}</div>
-);
-
 export default function VirtualKeyboard({
   show,
   variant,
@@ -29,7 +21,7 @@ export default function VirtualKeyboard({
         ['1', '2', '3'],
         ['4', '5', '6'],
         ['7', '8', '9'],
-        ['0', 'A', 'B', 'C'],
+        ['0', 'A', 'B', 'C', 'BACK'], // Ajout de BACK ici
       ];
     }
 
@@ -38,7 +30,7 @@ export default function VirtualKeyboard({
         ['1', '2', '3'],
         ['4', '5', '6'],
         ['7', '8', '9'],
-        ['0'],
+        ['0', 'BACK'], // Ajout de BACK ici
       ];
     }
 
@@ -126,4 +118,3 @@ export default function VirtualKeyboard({
     </div>
   );
 }
-
