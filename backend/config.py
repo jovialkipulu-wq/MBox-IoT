@@ -24,7 +24,7 @@ class Config:
     MARIADB_PASSWORD = os.getenv("MARIADB_PASSWORD", "meetingbox_password")
     MARIADB_DATABASE = os.getenv("MARIADB_DATABASE", "meetingbox")
 
-    ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "admin123")
+    ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "B32028")
 
     SECRET_KEY = os.getenv("SECRET_KEY", "dev-secret-key")
     DEBUG = os.getenv("FLASK_DEBUG", "1") == "1"

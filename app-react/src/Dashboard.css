@@ -597,10 +597,14 @@ body {
   align-items: center;
   justify-content: center;
   animation: fadeIn .2s ease;
+  padding-bottom: 80px; /* évite le chevauchement avec la status bar */
+  box-sizing: border-box;
 }
 
 .modal {
   background: var(--card);
+
+
   border: 1px solid var(--border);
   border-radius: 18px;
   padding: 2.5rem;
@@ -700,60 +704,83 @@ body {
   left: 0;
   bottom: 0;
   width: 100vw;
-  z-index: 99999 !important; /* Force le passage devant la barre verte */
+  z-index: 10000 !important; /* Augmenté pour être sûr de passer devant TOUT */
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  background: rgba(0, 0, 0, 0.2); /* Léger assombrissement du fond */
-  pointer-events: none; /* Permet de cliquer à travers si besoin */
+  background: rgba(0, 0, 0, 0.3);
+  pointer-events: none;
 }
 
 .vk-modal {
-  pointer-events: auto; /* Réactive les clics sur le clavier */
+  pointer-events: auto;
   width: 100%;
-  background: #f8fafc; /* Un gris très clair propre */
-  border-top: 2px solid #e2e8f0;
-  box-shadow: 0 -10px 25px rgba(0, 0, 0, 0.3);
+  background: #f1f5f9; /* Un peu plus foncé pour contraster avec les touches blanches */
+  border-top: 2px solid #cbd5e1;
+  box-shadow: 0 -10px 25px rgba(0, 0, 0, 0.4);
   display: flex;
   flex-direction: column;
-  padding-bottom: env(safe-area-inset-bottom); /* Pour les écrans modernes */
+  padding-bottom: 10px;
 }
 
 .vk-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 8px 20px;
+  padding: 10px 15px;
   background: white;
   border-bottom: 1px solid #e2e8f0;
 }
 
-.vk-title {
-  font-size: 0.9rem;
+/* --- NOUVEAU : Zone d'affichage (Preview) --- */
+.vk-preview-area {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  background: #f8fafc;
+  padding: 8px 15px;
+  border-radius: 8px;
+  margin-right: 15px;
+  border: 1px solid #cbd5e1;
+  min-height: 45px;
+}
+
+.vk-preview-label {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #64748b;
+  margin-right: 10px;
+  white-space: nowrap;
+}
+
+.vk-preview-value {
+  font-size: 1.3rem;
   font-weight: 700;
-  color: #1e293b;
-  text-transform: uppercase;
+  color: #0f172a;
+  letter-spacing: 1px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .vk-close {
-  padding: 5px 15px;
-  font-size: 1.5rem;
-  color: #64748b;
+  padding: 5px 10px;
+  font-size: 1.6rem;
+  color: #ef4444; /* Rouge pour la fermeture */
   cursor: pointer;
   border: none;
   background: none;
+  font-weight: bold;
 }
 
 .vk-body {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  padding: 10px;
+  padding: 12px;
   width: 100%;
   box-sizing: border-box;
 }
 
-/* Ligne de touches flexible pour AZERTY */
 .vk-row {
   display: flex;
   justify-content: center;
@@ -761,59 +788,53 @@ body {
   width: 100%;
 }
 
-/* LA TOUCHE : Ajustée pour le tactile */
 .vk-key {
-  flex: 1; /* Distribue l'espace équitablement */
-  min-width: 0; /* Empêche l'éclatement */
-  height: 55px; /* Taille parfaite pour un index sur 7 pouces */
+  flex: 1;
+  min-width: 0;
+  height: 60px; /* Légèrement augmenté pour le confort */
   display: flex;
   align-items: center;
   justify-content: center;
   background: white;
   border: 1px solid #cbd5e1;
-  border-radius: 8px;
+  border-radius: 10px;
   color: #1e293b;
-  font-size: 1.2rem;
-  font-weight: 600;
+  font-size: 1.3rem;
+  font-weight: 700;
   cursor: pointer;
-  box-shadow: 0 2px 0 #cbd5e1;
+  box-shadow: 0 3px 0 #cbd5e1;
   touch-action: manipulation;
 }
 
 .vk-key:active {
-  transform: translateY(2px);
+  transform: translateY(3px);
   box-shadow: none;
-  background: #f1f5f9;
+  background: #e2e8f0;
 }
 
-/* Touche spéciale Effacer (Rouge) */
 .vk-key-back {
-  flex: 1.5; /* Un peu plus large */
-  background: #fef2f2;
-  color: #dc2626;
-  border-color: #fecaca;
-  box-shadow: 0 2px 0 #fecaca;
+  flex: 1.8; /* Plus large pour l'attraper facilement */
+  background: #fee2e2;
+  color: #b91c1c;
+  border-color: #fca5a5;
+  box-shadow: 0 3px 0 #fca5a5;
 }
 
-/* Touche Espace */
 .vk-key-wide {
-  flex: 5; /* Très large */
-  background: white;
+  flex: 4; /* Largeur de la barre espace */
+  background: #f8fafc;
 }
 
-/* Configuration spécifique pour le Pavé Numérique (PIN/Admin) */
-/* Si tu mets une classe .vk-numeric sur le vk-body pour le mode PIN */
-.vk-numeric .vk-row {
-    max-width: 400px; /* On ne l'étale pas sur tout l'écran */
-    margin: 0 auto;
-}
-
-.vk-numeric .vk-key {
-    height: 70px; /* Encore plus grand pour les chiffres */
-    font-size: 1.5rem;
+/* --- SCROLL TACTILE (Pour ton point 4) --- */
+.time-slots-container, .reservation-modal {
+  overflow-y: auto !important;
+  touch-action: pan-y !important;
+  -webkit-overflow-scrolling: touch;
 }
 /* ───────── Modal Time Row ───────── */
 .modal-time-row {
+
+
   display: flex;
   gap: .75rem;
   margin-bottom: .8rem;

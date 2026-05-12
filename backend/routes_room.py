@@ -14,8 +14,14 @@ _occupancy_state = {
 # ID de la réservation dont la présence a été validée au moins une fois
 _presence_validated_for = None
 
-# Délai de grâce (en minutes) avant annulation automatique si aucune présence
+# Délai dynamique (moitié de la durée du créneau) avant annulation imminente
+# NB: le front n'a que `reserved` et affiche l'urgence via `minutes_until_forfeit`.
+# Donc ici on calcule `minutes_until_forfeit` pour déclencher le message urgent.
 GRACE_PERIOD_MINUTES = 30
+
+# Durée (en minutes) pendant laquelle on affiche "annulation imminente" avant libération.
+IMMINENT_RELEASE_MINUTES = 1
+
 
 
 def _get_active_reservation():
@@ -152,27 +158,60 @@ def get_room_status():
         start_dt = datetime.fromisoformat(start_dt.replace("Z", "+00:00"))
 
     minutes_since_start = (now - start_dt).total_seconds() / 60.0
-    minutes_until_forfeit = max(0, GRACE_PERIOD_MINUTES - minutes_since_start)
 
-    # Présence détectée dans les 15 premières minutes ?
+    # --- Calcul dynamique "moitié de la durée" ---
+    end_dt = row["end_time"]
+    if isinstance(end_dt, str):
+        end_dt = datetime.fromisoformat(end_dt.replace("Z", "+00:00"))
+
+    total_duration_minutes = max(1.0, (end_dt - start_dt).total_seconds() / 60.0)
+    half_duration_minutes = total_duration_minutes / 2.0
+
+    # Fenêtre : si au moins une présence validée intervient avant half_duration_minutes,
+    # alors on considère "occupied".
     last_seen = _occupancy_state["last_seen"]
-    presence_in_window = False
+    presence_validated_before_half = False
     if _occupancy_state["occupied"] and last_seen:
         last_seen_dt = datetime.fromisoformat(last_seen.replace("Z", "+00:00"))
-        if start_dt <= last_seen_dt <= start_dt + timedelta(minutes=GRACE_PERIOD_MINUTES):
-            presence_in_window = True
+        if start_dt <= last_seen_dt <= start_dt + timedelta(minutes=half_duration_minutes):
+            presence_validated_before_half = True
             _presence_validated_for = row["id"]
 
-    if _presence_validated_for == row["id"] or (presence_in_window and minutes_since_start <= GRACE_PERIOD_MINUTES):
+    is_occupied = (_presence_validated_for == row["id"] and presence_validated_before_half) or (_presence_validated_for == row["id"])
+
+    # --- Statut & timer pour le front ---
+    # Le front affiche "annulation imminente" quand minutes_until_forfeit <= 0.
+    # On veut: statut reserved avec minutes_until_forfeit > 0 jusqu'à half_duration,
+    # puis pendant IMMINENT_RELEASE_MINUTES => reserved + minutes_until_forfeit <= 0,
+    # puis libération => free.
+    if is_occupied:
         status = "occupied"
+        minutes_until_forfeit = 0
     else:
-        status = "reserved"
+        minutes_until_imminent = half_duration_minutes - minutes_since_start
+
+        if minutes_until_imminent > 0:
+            status = "reserved"
+            minutes_until_forfeit = minutes_until_imminent
+        else:
+            minutes_in_imminent_phase = minutes_since_start - half_duration_minutes
+            if minutes_in_imminent_phase <= IMMINENT_RELEASE_MINUTES:
+                status = "reserved"
+                minutes_until_forfeit = 0
+            else:
+                # Libération auto
+                try:
+                    _cancel_reservation(row["id"])
+                except Exception:
+                    pass
+                _presence_validated_for = None
+                return jsonify({"status": "free", "reservation": None})
 
     return jsonify({
         "status": status,
-        "grace_period_minutes": GRACE_PERIOD_MINUTES,
+        "grace_period_minutes": half_duration_minutes,
         "minutes_since_start": round(minutes_since_start, 1),
-        "minutes_until_forfeit": round(minutes_until_forfeit, 1),
+        "minutes_until_forfeit": round(max(0, minutes_until_forfeit), 1),
         "reservation": {
             "id": row["id"],
             "reserved_by": row["reserved_by"],
@@ -180,3 +219,4 @@ def get_room_status():
             "end_time": row["end_time"].isoformat() if isinstance(row["end_time"], datetime) else row["end_time"],
         },
     })
+

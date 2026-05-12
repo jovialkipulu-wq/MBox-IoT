@@ -654,9 +654,27 @@ function Dashboard() {
         <button className="modal-btn" onClick={handleBookConfirm}>Confirmer la réservation</button>
       </Modal>
 
-      <Modal show={showCancelModal} onClose={() => { setShowCancelModal(false); setCancelPin(''); }} title="Annuler une réservation">
+      <Modal
+        show={showCancelModal}
+        onClose={() => {
+          setShowCancelModal(false);
+          setCancelPin('');
+          // fermer aussi le clavier si jamais il était ouvert
+          closeKeyboard();
+        }}
+        title="Annuler une réservation"
+      >
         {cancelTarget && (
           <>
+
+            <input
+              style={{ position: 'absolute', left: -99999, top: 'auto', width: 1, height: 1, overflow: 'hidden' }}
+              aria-hidden="true"
+              tabIndex={-1}
+              value={cancelPin}
+              readOnly
+            />
+
             <p className="modal-desc">
               Créneau <strong>{cancelTarget.start_time?.split('T')[1]?.substring(0, 5)} – {cancelTarget.end_time?.split('T')[1]?.substring(0, 5)}</strong>
               <br />
@@ -670,8 +688,10 @@ function Dashboard() {
               value={cancelPin}
               onChange={(e) => setCancelPin(e.target.value.replace(/\D/g, ''))}
               onKeyDown={(e) => e.key === 'Enter' && handleCancelConfirm()}
+              onFocus={() => openKeyboard('pin', 'cancelPin')}
               autoFocus
             />
+
             <button className="modal-btn modal-btn-danger" onClick={handleCancelConfirm}>Confirmer l'annulation</button>
           </>
         )}
