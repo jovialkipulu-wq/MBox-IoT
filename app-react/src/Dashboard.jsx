@@ -499,10 +499,10 @@ function Dashboard() {
 
       <section className="section section-wide" id="data">
         <h2 className="section-title"><span className="title-dot"></span>Données en direct</h2>
-        <p className="section-sub">Tableau de bord IoT — ThingsBoard</p>
+
         <div className="tb-iframe-wrap">
           <iframe
-            src="https://thingsboard.icam.technology/dashboard/58cd7d80-401c-11f1-b38a-4df4ced3e7cf?publicId=ac4bdf80-c9e6-11f0-b38a-4df4ced3e7cf&title=false&header=false&toolbar=false&dash-breadcrumbs=false&hideToolbar=true&displayHeader=false&sandbox=true"
+            src="https://thingsboard.icam.technology/dashboard/58cd7d80-401c-11f1-b38a-4df4ced3e7cf?publicId=ac4bdf80-c9e6-11f0-b38a-4df4ced3e7cf&title=false&header=false&toolbar=false&dash-breadcrumbs=false&hideToolbar=true&displayHeader=false&sandbox=true&preserveAspectRatio=true&mobileAutoscale=false"
             title="ThingsBoard Dashboard"
             className="tb-iframe"
             allowFullScreen
