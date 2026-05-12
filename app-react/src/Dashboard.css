@@ -1185,6 +1185,9 @@ body {
   /* On force une taille de PC Desktop */
   width: 1000px !important; 
   height: 700px !important;
+  padding-left: 0px; /* Décalage pour compenser les bordures du wrap */
+  padding-right: 400px;
+  padding-bottom: 20px; /* Décalage pour compenser les bordures du wrap */
   
   /* On la réduit pour qu'elle rentre dans le cadre de la Raspberry */
   /* Ajuste ce chiffre (0.5 ou 0.6) jusqu'à ce que les bords touchent le cadre */
