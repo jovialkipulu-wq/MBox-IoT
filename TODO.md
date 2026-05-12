@@ -1,7 +1,9 @@
-- [x] Fix ThingsBoard iframe framing (remove transform scaling; improve responsive sizing)
-- [ ] Implement kiosk auto-scroll fix (pause during modals + use correct scroll container)
-- [ ] Add custom virtual keyboard (shown on focus of text inputs; numeric keypad for PIN)
-- [ ] Add time-field wheel/touch increments for selecting start/end times (respect constraints)
-- [ ] Build/test: run frontend and validate kiosk flows
+# TODO
 
+- [x] Ajouter `padding-top: 40px` sur le titre “Données en direct”
+- [x] Ajouter une mini barre de défilement sur le sélecteur d’heure
+- [x] Centrer le texte du planning (“Planning de la salle” + “Choisissez une date…”)
+- [ ] Lire l’ensemble du projet et identifier les fichiers non utilisés
+- [ ] Supprimer ce qui n’est pas utilisé
+- [ ] Mettre à jour le README avec les étapes de démarrage (Windows / Linux / macOS)
 

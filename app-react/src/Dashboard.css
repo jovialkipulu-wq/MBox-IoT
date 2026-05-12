@@ -1,5 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,500;0,9..40,700;1,9..40,300&family=Syne:wght@700;800&display=swap');
 
+html {
+  scroll-snap-type: y mandatory;
+}
+
+section {
+  scroll-snap-align: start;
+  height: 100vh; /* Indispensable pour l'aimantage */
+}
 /* ───────── Variables ───────── */
 :root {
   --bg: #f5f7fa;
@@ -218,6 +226,13 @@ body {
   margin-bottom: .5rem;
 }
 
+.section-wide#data {
+  padding-top: 40px;
+}
+
+
+
+
 .title-dot {
   width: 10px;
   height: 10px;
@@ -236,6 +251,7 @@ body {
 }
 
 /* ───────── Grid capteurs (3 colonnes) ───────── */
+
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -872,8 +888,23 @@ body {
 }
 
 .time-scroll-container::-webkit-scrollbar {
-  display: none; /* Cache la barre pour un look mobile */
+  width: 6px;
 }
+
+.time-scroll-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.time-scroll-container::-webkit-scrollbar-thumb {
+  background: rgba(37, 99, 235, .35);
+  border-radius: 999px;
+}
+
+.time-scroll-container {
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: rgba(37, 99, 235, .45) transparent;
+}
+
 
 .time-item {
   height: 40px;
@@ -969,27 +1000,6 @@ body {
   border-top: 1px solid var(--border);
   max-width: 1100px;
   margin: 0 auto;
-}
-
-/* ───────── CO2 Alert Banner ───────── */
-.co2-alert-banner {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 190;
-  background: linear-gradient(135deg, #dc2626, #b91c1c);
-  color: #fff;
-  text-align: center;
-  padding: 12px 20px;
-  font-weight: 700;
-  font-size: .9rem;
-  animation: slideDown .4s ease;
-}
-
-@keyframes slideDown {
-  from { transform: translateY(-100%); }
-  to { transform: translateY(0); }
 }
 
 /* ───────── Loading Pulse ───────── */
@@ -1171,6 +1181,35 @@ body {
   display: block;
   border-radius: 18px;
 }
+/* 1. On réduit les marges internes de la section complète */
+#data.section-wide {
+  padding-top: 1rem;    /* On réduit l'espace en haut */
+  padding-bottom: 1rem; /* On réduit l'espace en bas */
+  height: 100vh;        /* On s'assure qu'elle ne dépasse pas l'écran */
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Centre le contenu verticalement */
+}
+
+/* 2. On réduit la place prise par les titres */
+#data .section-title {    /* Titre plus petit */
+  margin-bottom: 0.2rem; 
+}
+
+#data .section-sub {
+  font-size: 0.8rem;
+  margin-bottom: 1rem;   /* Moins d'espace sous le sous-titre */
+}
+
+/* Centrage texte du planning */
+#planning .section-sub {
+  text-align: center;
+}
+
+#planning .section-title {
+  justify-content: center;
+}
+
 
 /* ───────── Status Bar ───────── */
 .status-bar {
