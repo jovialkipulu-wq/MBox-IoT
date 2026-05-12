@@ -607,7 +607,8 @@ body {
 .modal-overlay {
   position: fixed;
   inset: 0;
-  z-index: 150;
+  z-index: 250;
+
   background: rgba(0, 0, 0, .55);
   display: flex;
   align-items: center;
@@ -1164,33 +1165,42 @@ body {
 
 /* ───────── ThingsBoard Iframe ───────── */
 .tb-iframe-wrap {
-  width: calc(100% - 4rem);
+  position: relative;
+  width: 95%;           /* Presque toute la largeur */
   max-width: 1100px;
-  margin: 0 auto;
-  border-radius: 18px;
-  border: 1px solid var(--border);
-  overflow: hidden;
-  background: var(--card);
-  box-shadow: 0 2px 12px rgba(0,0,0,.06);
+  margin: 1rem auto;
+  height: 70vh;         /* On lui donne de la place */
+  border-radius: 15px;
+  border: 1px solid #ddd;
+  overflow: hidden;     /* On coupe ce qui dépasse */
+  background-color: #C5E2EC
 }
 
+/* 2. L'iframe : on la force à être GRANDE pour avoir l'affichage original */
 .tb-iframe {
-  width: 100%;
-  height: 75vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  
+  /* On force une taille de PC Desktop */
+  width: 1000px !important; 
+  height: 700px !important;
+  
+  /* On la réduit pour qu'elle rentre dans le cadre de la Raspberry */
+  /* Ajuste ce chiffre (0.5 ou 0.6) jusqu'à ce que les bords touchent le cadre */
+  transform: scale(0.58); 
+  
+  transform-origin: top left; /* Très important pour l'alignement */
   border: none;
-  display: block;
-  border-radius: 18px;
 }
 /* 1. On réduit les marges internes de la section complète */
 #data.section-wide {
-  padding-top: 1rem;    /* On réduit l'espace en haut */
-  padding-bottom: 1rem; /* On réduit l'espace en bas */
-  height: 100vh;        /* On s'assure qu'elle ne dépasse pas l'écran */
+  height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: center; /* Centre le contenu verticalement */
-}
-
+  justify-content: flex-start;
+  padding-top: 1rem;
+  }
 /* 2. On réduit la place prise par les titres */
 #data .section-title {    /* Titre plus petit */
   margin-bottom: 0.2rem; 
