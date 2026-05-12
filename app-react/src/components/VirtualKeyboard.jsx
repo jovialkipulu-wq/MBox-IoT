@@ -112,11 +112,12 @@ export default function VirtualKeyboard({
     <div className="vk-overlay" role="dialog" aria-modal="true">
       <div className="vk-modal" onClick={(e) => e.stopPropagation()}>
         <div className="vk-header">
-          <div className="vk-title">Clavier</div>
+          <div className="vk-title" aria-hidden="true" style={{ display: 'none' }}>Clavier</div>
           <button className="vk-close" type="button" onClick={onClose} aria-label="Fermer le clavier">
             ✕
           </button>
         </div>
+
         <div className="vk-body">
           {rows.map((r) => renderRow(r))}
           {pinFooter}
