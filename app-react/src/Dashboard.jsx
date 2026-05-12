@@ -538,6 +538,14 @@ function Dashboard() {
                 if (hasOverlap(startMin, endMin)) {
                   return showFeedback('Ce créneau chevauche une réservation existante', 'error');
                 }
+                // Empêche la réservation d’un créneau déjà passé (même en cas de “créneau personnalisé”)
+                const todayStr = new Date().toISOString().split('T')[0];
+                const now = new Date();
+                const nowMin = now.getHours() * 60 + now.getMinutes();
+                if (selectedDate === todayStr && endMin <= nowMin) {
+                  return showFeedback('Ce créneau est déjà passé', 'error');
+                }
+
                 setSelectedSlot({ startMin, endMin, time: formatSlotLabel(startMin, endMin) });
                 setShowBookModal(true);
               }}
@@ -596,42 +604,39 @@ function Dashboard() {
 
         <div className="modal-time-row">
           <div className="modal-time-field">
-            <label htmlFor="book-start">Heure de début</label>
-            <input
-              id="book-start"
-              type="time"
-              className="modal-input modal-time-input"
-              value={bookStartTime}
-              onChange={(e) => {
-                const newStart = e.target.value;
-                setBookStartTime(newStart);
-                const newStartMin = timeToMinutes(newStart);
-                const endMin = timeToMinutes(bookEndTime);
-                if (endMin <= newStartMin) {
-                  setBookEndTime(minutesToTime(Math.min(newStartMin + DEFAULT_SLOT_MINUTES, BUSINESS_END)));
-                }
-              }}
-              min="08:00"
-              max="17:59"
-              autoFocus
-            />
+            <label>Heure de début</label>
+            <div className="custom-time-picker">
+              <div className="time-scroll-container">
+                {/* On génère les heures de 08 à 17 */}
+                {Array.from({ length: 11 }, (_, i) => i + 8).map(h => (
+                  <div 
+                    key={h} 
+                    className={`time-item ${parseInt(bookStartTime.split(':')[0]) === h ? 'active' : ''}`}
+                    onClick={() => setBookStartTime(`${h.toString().padStart(2, '0')}:00`)}
+                  >
+                    {h.toString().padStart(2, '0')}:00
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
+          
           <div className="modal-time-field">
-            <label htmlFor="book-end">Heure de fin</label>
-            <input
-              id="book-end"
-              type="time"
-              className="modal-input modal-time-input"
-              value={bookEndTime}
-              onChange={(e) => {
-                const newEnd = e.target.value;
-                const newEndMin = timeToMinutes(newEnd);
-                const startMin = timeToMinutes(bookStartTime);
-                if (newEndMin > startMin) setBookEndTime(newEnd);
-              }}
-              min="08:01"
-              max="18:00"
-            />
+            <label>Heure de fin</label>
+            <div className="custom-time-picker">
+              <div className="time-scroll-container">
+                {/* On génère les heures de 09 à 18 */}
+                {Array.from({ length: 11 }, (_, i) => i + 9).map(h => (
+                  <div 
+                    key={h} 
+                    className={`time-item ${parseInt(bookEndTime.split(':')[0]) === h ? 'active' : ''}`}
+                    onClick={() => setBookEndTime(`${h.toString().padStart(2, '0')}:00`)}
+                  >
+                    {h.toString().padStart(2, '0')}:00
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
 
@@ -645,7 +650,8 @@ function Dashboard() {
           onFocus={() => openKeyboard('text', 'name')}
         />
         <input
-          type="password"
+          type="text"
+          inputMode="numeric"
           className="modal-input"
           placeholder="Choisissez un PIN (4 chiffres)"
           maxLength={4}

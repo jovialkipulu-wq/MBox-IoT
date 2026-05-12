@@ -831,10 +831,8 @@ body {
   touch-action: pan-y !important;
   -webkit-overflow-scrolling: touch;
 }
-/* ───────── Modal Time Row ───────── */
+/* ───────── Modal Time Row (ON GARDE) ───────── */
 .modal-time-row {
-
-
   display: flex;
   gap: .75rem;
   margin-bottom: .8rem;
@@ -850,26 +848,49 @@ body {
 .modal-time-field label {
   font-size: .78rem;
   font-weight: 600;
-  color: var(--text-dim);
+  color: #64748b; /* var(--text-dim) */
   text-transform: uppercase;
   letter-spacing: .5px;
 }
 
-.modal-time-field .modal-input {
-  margin-bottom: 0;
+/* ───────── NOUVEAU : Le sélecteur à défilement ───────── */
+.custom-time-picker {
+  height: 120px; /* Hauteur pour voir 3 créneaux */
+  overflow: hidden;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: white;
+  position: relative;
 }
 
-input[type="time"].modal-time-input {
-  padding: 10px 12px;
-  min-height: 44px;
-  cursor: text;
+.time-scroll-container {
+  height: 100%;
+  overflow-y: scroll;
+  touch-action: pan-y !important; /* CRUCIAL pour ton écran tactile */
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: y mandatory;
 }
 
-input[type="time"].modal-time-input::-webkit-calendar-picker-indicator {
-  filter: invert(0.5);
+.time-scroll-container::-webkit-scrollbar {
+  display: none; /* Cache la barre pour un look mobile */
+}
+
+.time-item {
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  font-size: 1.1rem;
+  scroll-snap-align: center;
+  color: #64748b;
   cursor: pointer;
+  transition: all 0.2s;
 }
 
+.time-item.active {
+  background-color: #2563eb; /* Ton bleu principal */
+  color: white;
+  font-weight: bold;
+}
 /* ───────── Admin Table ───────── */
 .admin-section {
   border-top: 2px solid var(--warning);
@@ -1225,30 +1246,6 @@ input[type="time"].modal-time-input::-webkit-calendar-picker-indicator {
   background: linear-gradient(135deg, #dc2626, #b91c1c);
 }
 
-/* Scroll-to-top button */
-.scroll-top-btn {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border: 2px solid rgba(255,255,255,.35);
-  background: rgba(255,255,255,.15);
-  color: #fff;
-  font-size: 1.1rem;
-  font-weight: 700;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform .2s, background .2s, border-color .2s;
-  -webkit-backdrop-filter: blur(4px);
-  backdrop-filter: blur(4px);
-}
-
-.scroll-top-btn:hover {
-  transform: translateY(-2px);
-  background: rgba(255,255,255,.3);
-  border-color: rgba(255,255,255,.6);
-}
 
 /* ───────── Responsive ───────── */
 @media (max-width: 1024px) {
