@@ -1173,7 +1173,8 @@ body {
   border-radius: 15px;
   border: 1px solid #ddd;
   overflow: hidden;     /* On coupe ce qui dépasse */
-  background-color: #C5E2EC
+  background-color: #C5E2EC;
+
 }
 
 /* 2. L'iframe : on la force à être GRANDE pour avoir l'affichage original */
@@ -1183,8 +1184,8 @@ body {
   left: 0;
   
   /* On force une taille de PC Desktop */
-  width: 1000px !important; 
-  height: 700px !important;
+  width: 1200px !important; 
+  height: 750px !important;
   padding-left: 0px; /* Décalage pour compenser les bordures du wrap */
   padding-right: 400px;
   padding-bottom: 20px; /* Décalage pour compenser les bordures du wrap */
