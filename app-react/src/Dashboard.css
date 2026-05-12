@@ -693,102 +693,125 @@ body {
   box-shadow: 0 8px 30px rgba(220, 38, 38, .3);
 }
 
-/* ───────── Virtual Keyboard ───────── */
+/* ───────── Virtual Keyboard (tactile kiosk 7") ───────── */
+
 .vk-overlay {
   position: fixed;
-  inset: 0;
-  z-index: 160;
+  left: 0;
+  bottom: 0;
+  width: 100vw;
+  z-index: 99999 !important; /* Force le passage devant la barre verte */
   display: flex;
-  align-items: flex-end;
   justify-content: center;
-  background: rgba(0, 0, 0, .45);
-  padding: 1rem;
+  align-items: flex-end;
+  background: rgba(0, 0, 0, 0.2); /* Léger assombrissement du fond */
+  pointer-events: none; /* Permet de cliquer à travers si besoin */
 }
 
 .vk-modal {
-  width: min(100%, 420px);
-  max-height: 92vh;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 22px;
-  overflow: hidden;
+  pointer-events: auto; /* Réactive les clics sur le clavier */
+  width: 100%;
+  background: #f8fafc; /* Un gris très clair propre */
+  border-top: 2px solid #e2e8f0;
+  box-shadow: 0 -10px 25px rgba(0, 0, 0, 0.3);
   display: flex;
   flex-direction: column;
-  box-shadow: 0 24px 60px rgba(0, 0, 0, .22);
+  padding-bottom: env(safe-area-inset-bottom); /* Pour les écrans modernes */
 }
 
 .vk-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: .75rem;
-  padding: 1rem 1.25rem;
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
+  padding: 8px 20px;
+  background: white;
+  border-bottom: 1px solid #e2e8f0;
 }
 
 .vk-title {
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 700;
-  color: var(--text);
+  color: #1e293b;
+  text-transform: uppercase;
 }
 
 .vk-close {
+  padding: 5px 15px;
+  font-size: 1.5rem;
+  color: #64748b;
+  cursor: pointer;
   border: none;
   background: none;
-  color: var(--text-dim);
-  font-size: 1.2rem;
-  cursor: pointer;
 }
 
 .vk-body {
-  display: grid;
-  gap: .75rem;
-  padding: 1rem 1.25rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
+/* Ligne de touches flexible pour AZERTY */
 .vk-row {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: .65rem;
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
 }
 
+/* LA TOUCHE : Ajustée pour le tactile */
 .vk-key {
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 1rem .75rem;
-  background: var(--surface);
-  color: var(--text);
-  font-size: 1rem;
-  font-weight: 700;
+  flex: 1; /* Distribue l'espace équitablement */
+  min-width: 0; /* Empêche l'éclatement */
+  height: 55px; /* Taille parfaite pour un index sur 7 pouces */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  color: #1e293b;
+  font-size: 1.2rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: transform .15s, background .2s, border-color .2s;
+  box-shadow: 0 2px 0 #cbd5e1;
+  touch-action: manipulation;
 }
 
-.vk-key:hover {
-  transform: translateY(-1px);
-  border-color: var(--accent);
-  background: rgba(37, 99, 235, .08);
+.vk-key:active {
+  transform: translateY(2px);
+  box-shadow: none;
+  background: #f1f5f9;
 }
 
+/* Touche spéciale Effacer (Rouge) */
 .vk-key-back {
-  background: rgba(220, 38, 38, .12);
-  color: var(--danger);
+  flex: 1.5; /* Un peu plus large */
+  background: #fef2f2;
+  color: #dc2626;
+  border-color: #fecaca;
+  box-shadow: 0 2px 0 #fecaca;
 }
 
+/* Touche Espace */
 .vk-key-wide {
-  grid-column: span 3;
+  flex: 5; /* Très large */
+  background: white;
 }
 
-.vk-footer {
-  margin-top: .5rem;
-  padding-top: .75rem;
-  border-top: 1px solid var(--border);
-  color: var(--text-dim);
-  font-size: .95rem;
-  text-align: center;
+/* Configuration spécifique pour le Pavé Numérique (PIN/Admin) */
+/* Si tu mets une classe .vk-numeric sur le vk-body pour le mode PIN */
+.vk-numeric .vk-row {
+    max-width: 400px; /* On ne l'étale pas sur tout l'écran */
+    margin: 0 auto;
 }
 
+.vk-numeric .vk-key {
+    height: 70px; /* Encore plus grand pour les chiffres */
+    font-size: 1.5rem;
+}
 /* ───────── Modal Time Row ───────── */
 .modal-time-row {
   display: flex;
@@ -1268,4 +1291,26 @@ input[type="time"].modal-time-input::-webkit-calendar-picker-indicator {
     transform: scale(.38);
     transform-origin: top center;
   }
+}
+/* Small-screen app fixes */
+@media (max-width: 900px) {
+  .page { align-items: stretch; }
+  .section { padding: 2.5rem 1rem; }
+  .section-wide .section-title,
+  .section-wide .section-sub {
+    padding: 0 1rem;
+  }
+  .grid { gap: 1rem; }
+  .time-picker-group { justify-content: center; }
+}
+
+@media (max-width: 700px) {
+  .section { padding: 2rem 0.75rem; }
+  .hero { padding: 1.5rem 1rem; }
+  .grid { grid-template-columns: 1fr; }
+  .card { padding: 1.2rem; }
+  .date-picker-row { flex-direction: column; align-items: stretch; }
+  .date-picker-row > * { width: 100%; }
+  .modal { width: calc(100% - 2rem); }
+  .modal-input { width: 100%; }
 }

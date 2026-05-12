@@ -73,7 +73,7 @@ export default function StatusBar() {
     return () => clearInterval(timer);
   }, [status, countdown]);
 
-  // Afficher le bouton scroll-to-top uniquement en bas de page
+  // Bouton scroll-top supprimé (kiosque / tactile)
   useEffect(() => {
     const handleScroll = () => {
       const scrollTop = window.scrollY || document.documentElement.scrollTop;
@@ -119,16 +119,7 @@ export default function StatusBar() {
             </span>
           )}
         </div>
-        {showScrollBtn && (
-          <button
-            className="scroll-top-btn"
-            onClick={scrollToTop}
-            aria-label="Remonter en haut de la page"
-            title="Remonter"
-          >
-            ↑
-          </button>
-        )}
+
       </div>
     </div>
   );

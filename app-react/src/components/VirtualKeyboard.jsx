@@ -17,23 +17,39 @@ export default function VirtualKeyboard({
 }) {
   if (!show) return null;
 
-  // variant: 'pin' | 'text'
+  // variant: 'pin' | 'text' | 'admin'
   const isPin = variant === 'pin';
 
-  const rows = isPin
-    ? [
+  // Layout alphanumérique demandé (Admin password)
+  const isAdminNumericPassword = variant === 'admin';
+
+  const rows = (() => {
+    if (isAdminNumericPassword) {
+      return [
+        ['1', '2', '3'],
+        ['4', '5', '6'],
+        ['7', '8', '9'],
+        ['0', 'A', 'B', 'C'],
+      ];
+    }
+
+    if (isPin) {
+      return [
         ['1', '2', '3'],
         ['4', '5', '6'],
         ['7', '8', '9'],
         ['0'],
-      ]
-    : [
-        ['A', 'B', 'C', 'D', 'E', 'F'],
-        ['G', 'H', 'I', 'J', 'K', 'L'],
-        ['M', 'N', 'O', 'P', 'Q', 'R'],
-        ['S', 'T', 'U', 'V', 'W', 'X'],
-        ['Y', 'Z', 'SPACE', 'DOT', 'BACK'],
       ];
+    }
+
+    return [
+      ['A', 'B', 'C', 'D', 'E', 'F'],
+      ['G', 'H', 'I', 'J', 'K', 'L'],
+      ['M', 'N', 'O', 'P', 'Q', 'R'],
+      ['S', 'T', 'U', 'V', 'W', 'X'],
+      ['Y', 'Z', 'SPACE', 'DOT', 'BACK'],
+    ];
+  })();
 
   const renderRow = (r) => (
     <div className="vk-row" key={r.join('_') + '_row'}>
@@ -94,10 +110,12 @@ export default function VirtualKeyboard({
 
   return (
     <div className="vk-overlay" role="dialog" aria-modal="true">
-      <div className="vk-modal">
+      <div className="vk-modal" onClick={(e) => e.stopPropagation()}>
         <div className="vk-header">
           <div className="vk-title">Clavier</div>
-          <button className="vk-close" type="button" onClick={onClose}>✕</button>
+          <button className="vk-close" type="button" onClick={onClose} aria-label="Fermer le clavier">
+            ✕
+          </button>
         </div>
         <div className="vk-body">
           {rows.map((r) => renderRow(r))}

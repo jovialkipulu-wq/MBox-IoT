@@ -104,6 +104,8 @@ function Dashboard() {
   const [showAdminLogin, setShowAdminLogin] = useState(false);
   const [adminInput, setAdminInput] = useState('');
 
+  const [adminPasswordTemp, setAdminPasswordTemp] = useState('');
+
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
   const [reservations, setReservations] = useState([]);
   const [selectedSlot, setSelectedSlot] = useState(null);
@@ -422,15 +424,16 @@ function Dashboard() {
 
       <Modal show={showAdminLogin} onClose={() => setShowAdminLogin(false)} title="Accès Administrateur">
         <p className="modal-desc">Entrez le mot de passe administrateur</p>
-        <input
-          type="password"
-          className="modal-input"
-          placeholder="Mot de passe"
-          value={adminInput}
-          onChange={(e) => setAdminInput(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && handleAdminLogin()}
-          autoFocus
-        />
+          <input
+            type="password"
+            className="modal-input"
+            placeholder="Mot de passe"
+            value={adminInput}
+            readOnly
+            onClick={() => openKeyboard('admin', 'adminPassword')}
+            onFocus={() => openKeyboard('admin', 'adminPassword')}
+            autoFocus
+          />
         <button className="modal-btn" onClick={handleAdminLogin}>Connexion</button>
       </Modal>
 
@@ -453,8 +456,8 @@ function Dashboard() {
           vérifiez la qualité de l'air et réservez votre créneau en un clic.
         </p>
         <div className="hero-btns">
-          <a href="#data" className="hero-cta">Voir les données ↓</a>
-          <a href="#planning" className="hero-cta hero-cta-outline">Réserver un créneau</a>
+          <button type="button" className="hero-cta" onClick={() => scrollToSectionId('data')}>Voir les données ↓</button>
+          <button type="button" className="hero-cta hero-cta-outline" onClick={() => scrollToSectionId('planning')}>Réserver un créneau</button>
         </div>
       </section>
 
