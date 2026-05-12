@@ -74,7 +74,12 @@ function Dashboard() {
   const scrollToSectionId = useCallback((id) => {
     const el = document.getElementById(id);
     if (!el) return;
-    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    // stop net: alignement haut exact pour éviter un découpage en bas
+    el.scrollIntoView({ behavior: 'auto', block: 'start' });
+
+    // laisse le temps au layout de se stabiliser avant le prochain tick
+    // (le délai est géré par AUTO_SCROLL_MS)
   }, []);
   
 
@@ -91,12 +96,13 @@ function Dashboard() {
     // Démarre sur la bonne section dès le montage
     goToIndex(autoScrollIndex);
 
+    // Stocke l'index courant localement pour éviter les décalages UI
+    let current = autoScrollIndex;
+
     const intervalId = window.setInterval(() => {
-      setAutoScrollIndex((prev) => {
-        const next = (prev + 1) % sectionIds.length;
-        goToIndex(next);
-        return next;
-      });
+      current = (current + 1) % sectionIds.length;
+      goToIndex(current);
+      setAutoScrollIndex(current);
     }, AUTO_SCROLL_MS);
 
     return () => window.clearInterval(intervalId);
@@ -525,7 +531,7 @@ function Dashboard() {
             })}
           </span>
 
-          <div className="time-picker-group">
+          <div className="time-picker-group ">
             <label className="time-label">🕐 Début :</label>
             <input
               type="time"
@@ -667,7 +673,7 @@ function Dashboard() {
           onFocus={() => openKeyboard('text', 'name')}
         />
         <input
-          type="text"
+          type="password"
           inputMode="numeric"
           className="modal-input"
           placeholder="Choisissez un PIN (4 chiffres)"
@@ -700,7 +706,7 @@ function Dashboard() {
             </p>
 
             <input
-              type="text"
+              type="password"
               inputMode="numeric"
               className="modal-input"
               placeholder="Votre code PIN"
