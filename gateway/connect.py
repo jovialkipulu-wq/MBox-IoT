@@ -45,8 +45,8 @@ try:
             }
             
             if t is not None and h is not None:
-                payload["temperature"] = round(t, 1)
-                payload["humidity"] = round(h, 1)
+                payload["température"] = round(t, 1)
+                payload["humidité"] = round(h, 1)
             
             # 3. Envoi à ThingsBoard
             client.publish("v1/devices/me/telemetry", json.dumps(payload))

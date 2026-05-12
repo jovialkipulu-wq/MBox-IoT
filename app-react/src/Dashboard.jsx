@@ -360,15 +360,17 @@ function Dashboard() {
     const currentValue =
       keyboardTarget === 'pin'
         ? bookPin
-        : keyboardTarget === 'admin'
+        : keyboardTarget === 'adminPassword'
           ? adminInput
           : bookName;
 
     let nextValue = currentValue;
 
-
     if (type === 'back') {
       nextValue = currentValue.slice(0, -1);
+    } else if (type === 'enter') {
+      closeKeyboard();
+      return;
     } else if (type === 'char') {
       if (keyboardTarget === 'pin') {
         if (!/^[0-9]$/.test(char) || currentValue.length >= 4) return;
@@ -380,6 +382,8 @@ function Dashboard() {
 
     if (keyboardTarget === 'pin') {
       setBookPin(nextValue);
+    } else if (keyboardTarget === 'adminPassword') {
+      setAdminInput(nextValue);
     } else {
       setBookName(nextValue);
     }

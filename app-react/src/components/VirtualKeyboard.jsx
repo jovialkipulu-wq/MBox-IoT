@@ -20,7 +20,7 @@ export default function VirtualKeyboard({
         ['1', '2', '3'],
         ['4', '5', '6'],
         ['7', '8', '9'],
-        ['0', 'A', 'B', 'C', 'BACK'],
+        ['A', 'B', 'C', '0', 'BACK', 'ENTER'],
       ];
     }
     if (isPin) {
@@ -28,14 +28,14 @@ export default function VirtualKeyboard({
         ['1', '2', '3'],
         ['4', '5', '6'],
         ['7', '8', '9'],
-        ['0', 'BACK'],
+        ['0', 'BACK', 'ENTER'],
       ];
     }
     // Mode Texte en AZERTY standard
     return [
       ['A', 'Z', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
       ['Q', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'M'],
-      ['W', 'X', 'C', 'V', 'B', 'N', 'SPACE', 'DOT', 'BACK'],
+      ['W', 'X', 'C', 'V', 'B', 'N', 'SPACE', 'DOT', 'BACK', 'ENTER'],
     ];
   })();
 
@@ -47,6 +47,13 @@ export default function VirtualKeyboard({
           return (
             <button key={k} className="vk-key vk-key-back" type="button" onClick={() => onKey({ type: 'back' })}>
               ⌫
+            </button>
+          );
+        }
+        if (k === 'ENTER') {
+          return (
+            <button key={k} className="vk-key vk-key-enter" type="button" onClick={() => onKey({ type: 'enter' })}>
+              Entrée
             </button>
           );
         }
@@ -84,7 +91,7 @@ export default function VirtualKeyboard({
           {/* Point 5 : Zone d'affichage pour voir ce qu'on écrit */}
           <div className="vk-preview-area">
             <span className="vk-preview-label">
-              {isAdmin ? 'ADMIN' : isPin ? 'PIN' : 'SAISIE'} :
+              {(isPin || isAdmin) ? 'PIN' : 'SAISIE'} :
             </span>
             <span className="vk-preview-value">
               {/* Masque par des points si c'est un code/pass, sinon affiche le texte */}
