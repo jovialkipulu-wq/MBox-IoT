@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import './Dashboard.css';
 import StatusBar from './components/StatusBar.jsx';
+import VirtualKeyboard from './components/VirtualKeyboard.jsx';
 
 const API_BASE = 'http://localhost:5000/api';
 
@@ -115,6 +116,9 @@ function Dashboard() {
   const [bookName, setBookName] = useState('');
   const [bookPin, setBookPin] = useState('');
   const [cancelPin, setCancelPin] = useState('');
+  const [keyboardOpen, setKeyboardOpen] = useState(false);
+  const [keyboardVariant, setKeyboardVariant] = useState('text');
+  const [keyboardTarget, setKeyboardTarget] = useState(null);
   const [feedback, setFeedback] = useState(null);
 
   const [bookStartTime, setBookStartTime] = useState('08:00');
@@ -337,6 +341,40 @@ function Dashboard() {
     } catch { showFeedback('Serveur injoignable', 'error'); }
   };
 
+  const openKeyboard = (variant, target) => {
+    setKeyboardVariant(variant);
+    setKeyboardTarget(target);
+    setKeyboardOpen(true);
+  };
+
+  const closeKeyboard = () => {
+    setKeyboardOpen(false);
+    setKeyboardTarget(null);
+  };
+
+  const handleKeyboardKey = ({ type, char }) => {
+    if (!keyboardTarget) return;
+    const currentValue = keyboardTarget === 'pin' ? bookPin : bookName;
+    let nextValue = currentValue;
+
+    if (type === 'back') {
+      nextValue = currentValue.slice(0, -1);
+    } else if (type === 'char') {
+      if (keyboardTarget === 'pin') {
+        if (!/^[0-9]$/.test(char) || currentValue.length >= 4) return;
+        nextValue = currentValue + char;
+      } else {
+        nextValue = currentValue + char;
+      }
+    }
+
+    if (keyboardTarget === 'pin') {
+      setBookPin(nextValue);
+    } else {
+      setBookName(nextValue);
+    }
+  };
+
   const handleAdminCancel = async (id) => {
     if (!window.confirm('Annuler cette réservation (admin) ?')) return;
     try {
@@ -534,7 +572,7 @@ function Dashboard() {
         </div>
       </section>
 
-      <Modal show={showBookModal} onClose={() => { setShowBookModal(false); setSelectedSlot(null); }} title="Réserver un créneau">
+      <Modal show={showBookModal} onClose={() => { setShowBookModal(false); setSelectedSlot(null); closeKeyboard(); }} title="Réserver un créneau">
         <p className="modal-desc">
           <strong>{formatSlotLabel(timeToMinutes(bookStartTime), timeToMinutes(bookEndTime))}</strong>
           {' — '}
@@ -587,7 +625,9 @@ function Dashboard() {
           className="modal-input"
           placeholder="Votre nom"
           value={bookName}
-          onChange={(e) => setBookName(e.target.value)}
+          readOnly
+          onClick={() => openKeyboard('text', 'name')}
+          onFocus={() => openKeyboard('text', 'name')}
         />
         <input
           type="password"
@@ -595,8 +635,9 @@ function Dashboard() {
           placeholder="Choisissez un PIN (4 chiffres)"
           maxLength={4}
           value={bookPin}
-          onChange={(e) => setBookPin(e.target.value.replace(/\D/g, ''))}
-          onKeyDown={(e) => e.key === 'Enter' && handleBookConfirm()}
+          readOnly
+          onClick={() => openKeyboard('pin', 'pin')}
+          onFocus={() => openKeyboard('pin', 'pin')}
         />
         <p className="modal-hint">Ce PIN vous sera demandé pour annuler.</p>
         <button className="modal-btn" onClick={handleBookConfirm}>Confirmer la réservation</button>
@@ -624,6 +665,14 @@ function Dashboard() {
           </>
         )}
       </Modal>
+
+      <VirtualKeyboard
+        show={keyboardOpen}
+        variant={keyboardVariant}
+        value={keyboardTarget === 'pin' ? bookPin : bookName}
+        onKey={handleKeyboardKey}
+        onClose={closeKeyboard}
+      />
 
       {isAdmin && (
         <section className="section admin-section" id="admin">

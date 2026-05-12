@@ -693,6 +693,102 @@ body {
   box-shadow: 0 8px 30px rgba(220, 38, 38, .3);
 }
 
+/* ───────── Virtual Keyboard ───────── */
+.vk-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 160;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background: rgba(0, 0, 0, .45);
+  padding: 1rem;
+}
+
+.vk-modal {
+  width: min(100%, 420px);
+  max-height: 92vh;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, .22);
+}
+
+.vk-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+  padding: 1rem 1.25rem;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.vk-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.vk-close {
+  border: none;
+  background: none;
+  color: var(--text-dim);
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.vk-body {
+  display: grid;
+  gap: .75rem;
+  padding: 1rem 1.25rem 1.25rem;
+}
+
+.vk-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: .65rem;
+}
+
+.vk-key {
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1rem .75rem;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform .15s, background .2s, border-color .2s;
+}
+
+.vk-key:hover {
+  transform: translateY(-1px);
+  border-color: var(--accent);
+  background: rgba(37, 99, 235, .08);
+}
+
+.vk-key-back {
+  background: rgba(220, 38, 38, .12);
+  color: var(--danger);
+}
+
+.vk-key-wide {
+  grid-column: span 3;
+}
+
+.vk-footer {
+  margin-top: .5rem;
+  padding-top: .75rem;
+  border-top: 1px solid var(--border);
+  color: var(--text-dim);
+  font-size: .95rem;
+  text-align: center;
+}
+
 /* ───────── Modal Time Row ───────── */
 .modal-time-row {
   display: flex;
