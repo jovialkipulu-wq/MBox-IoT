@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
+
 import './Dashboard.css';
 import StatusBar from './components/StatusBar.jsx';
 import VirtualKeyboard from './components/VirtualKeyboard.jsx';
@@ -280,6 +281,7 @@ function Dashboard() {
     if (!bookName.trim()) return showFeedback('Entrez votre nom', 'error');
     if (bookPin.length !== 4 || !/^\d{4}$/.test(bookPin)) return showFeedback('PIN : 4 chiffres', 'error');
 
+
     const startMin = timeToMinutes(bookStartTime);
     const endMin = timeToMinutes(bookEndTime);
 
@@ -314,6 +316,8 @@ function Dashboard() {
         setShowPinReminder(true);
         setBookName('');
         setBookPin('');
+        setCancelPin('');
+        setAdminInput('');
         setSelectedSlot(null);
         fetchReservations();
       } else {
@@ -335,7 +339,13 @@ function Dashboard() {
         showFeedback('Réservation annulée');
         setShowCancelModal(false);
         setCancelPin('');
+        setBookName('');
+        setBookPin('');
+        setAdminInput('');
         setCancelTarget(null);
+        setKeyboardOpen(false);
+        setKeyboardVariant('text');
+        setKeyboardTarget(null);
         fetchReservations();
       } else {
         showFeedback(json.error || 'Erreur', 'error');
@@ -357,12 +367,16 @@ function Dashboard() {
   const handleKeyboardKey = ({ type, char }) => {
     if (!keyboardTarget) return;
 
+    const isPinTarget = keyboardTarget === 'pin' || keyboardTarget === 'cancelPin';
     const currentValue =
-      keyboardTarget === 'pin'
-        ? bookPin
-        : keyboardTarget === 'adminPassword'
-          ? adminInput
-          : bookName;
+      keyboardTarget === 'name'
+        ? bookName
+        : keyboardTarget === 'pin'
+          ? bookPin
+          : keyboardTarget === 'cancelPin'
+            ? cancelPin
+            : // adminPassword
+              adminInput;
 
     let nextValue = currentValue;
 
@@ -372,7 +386,7 @@ function Dashboard() {
       closeKeyboard();
       return;
     } else if (type === 'char') {
-      if (keyboardTarget === 'pin') {
+      if (isPinTarget) {
         if (!/^[0-9]$/.test(char) || currentValue.length >= 4) return;
         nextValue = currentValue + char;
       } else {
@@ -380,14 +394,17 @@ function Dashboard() {
       }
     }
 
-    if (keyboardTarget === 'pin') {
-      setBookPin(nextValue);
-    } else if (keyboardTarget === 'adminPassword') {
-      setAdminInput(nextValue);
-    } else {
+    if (keyboardTarget === 'name') {
       setBookName(nextValue);
+    } else if (keyboardTarget === 'pin') {
+      setBookPin(nextValue);
+    } else if (keyboardTarget === 'cancelPin') {
+      setCancelPin(nextValue);
+    } else {
+      setAdminInput(nextValue);
     }
   };
+
 
   const handleAdminCancel = async (id) => {
     if (!window.confirm('Annuler cette réservation (admin) ?')) return;
@@ -608,7 +625,7 @@ function Dashboard() {
             <div className="custom-time-picker">
               <div className="time-scroll-container">
                 {/* On génère les heures de 08 à 17 */}
-                {Array.from({ length: 11 }, (_, i) => i + 8).map(h => (
+                {Array.from({ length: 10 }, (_, i) => i + 8).map(h => (
                   <div 
                     key={h} 
                     className={`time-item ${parseInt(bookStartTime.split(':')[0]) === h ? 'active' : ''}`}
@@ -626,7 +643,7 @@ function Dashboard() {
             <div className="custom-time-picker">
               <div className="time-scroll-container">
                 {/* On génère les heures de 09 à 18 */}
-                {Array.from({ length: 11 }, (_, i) => i + 9).map(h => (
+                {Array.from({ length: 10 }, (_, i) => i + 9).map(h => (
                   <div 
                     key={h} 
                     className={`time-item ${parseInt(bookEndTime.split(':')[0]) === h ? 'active' : ''}`}
@@ -676,36 +693,31 @@ function Dashboard() {
       >
         {cancelTarget && (
           <>
-
-            <input
-              style={{ position: 'absolute', left: -99999, top: 'auto', width: 1, height: 1, overflow: 'hidden' }}
-              aria-hidden="true"
-              tabIndex={-1}
-              value={cancelPin}
-              readOnly
-            />
-
             <p className="modal-desc">
               Créneau <strong>{cancelTarget.start_time?.split('T')[1]?.substring(0, 5)} – {cancelTarget.end_time?.split('T')[1]?.substring(0, 5)}</strong>
               <br />
               Réservé par <strong>{cancelTarget.reserved_by}</strong>
             </p>
+
             <input
-              type="password"
+              type="text"
+              inputMode="numeric"
               className="modal-input"
               placeholder="Votre code PIN"
               maxLength={4}
               value={cancelPin}
-              onChange={(e) => setCancelPin(e.target.value.replace(/\D/g, ''))}
-              onKeyDown={(e) => e.key === 'Enter' && handleCancelConfirm()}
+              readOnly
               onFocus={() => openKeyboard('pin', 'cancelPin')}
               autoFocus
             />
 
-            <button className="modal-btn modal-btn-danger" onClick={handleCancelConfirm}>Confirmer l'annulation</button>
+            <button className="modal-btn modal-btn-danger" onClick={handleCancelConfirm}>
+              Confirmer l'annulation
+            </button>
           </>
         )}
       </Modal>
+
 
       <VirtualKeyboard
         show={keyboardOpen}
